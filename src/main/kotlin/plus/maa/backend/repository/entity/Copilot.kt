@@ -1,5 +1,7 @@
 package plus.maa.backend.repository.entity
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
@@ -52,6 +54,8 @@ class Copilot(
     var groups: List<Groups>? = null,
     // 战斗中的操作
     var actions: List<Action>? = null,
+    // Siming 图结构动作
+    var simingActions: Map<String, SimingAction>? = null,
     // 描述
     var doc: Doc?,
     // 首次上传时间
@@ -143,6 +147,37 @@ class Copilot(
         var doc: String? = "",
         var docColor: String? = "Gray",
     ) : Serializable
+
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+    data class SimingAction(
+        var action: String? = null,
+        var target: List<Int>? = null,
+        var begin: List<Int>? = null,
+        var end: List<Int>? = null,
+        var recognition: String? = null,
+        var expected: String? = null,
+        var roi: List<Int>? = null,
+        var preDelay: Int? = null,
+        var postDelay: Int? = null,
+        var rearDelay: Int? = null,
+        var duration: Int? = null,
+        var textDoc: String? = null,
+        var template: String? = null,
+        var timeout: Int? = null,
+        var greenMask: Boolean? = null,
+        var next: List<String>? = null,
+    ) : Serializable {
+        @JsonIgnore
+        private val additionalProperties: MutableMap<String, Any?> = mutableMapOf()
+
+        @JsonAnySetter
+        fun setAdditionalProperty(key: String, value: Any?) {
+            additionalProperties[key] = value
+        }
+
+        @JsonAnyGetter
+        fun getAdditionalProperties(): Map<String, Any?> = additionalProperties
+    }
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
     data class Doc(

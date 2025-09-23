@@ -1,6 +1,7 @@
 package plus.maa.backend.service
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.PageRequest
@@ -21,6 +22,7 @@ import plus.maa.backend.common.utils.converter.CopilotConverter
 import plus.maa.backend.config.external.MaaCopilotProperties
 import plus.maa.backend.controller.request.copilot.CopilotCUDRequest
 import plus.maa.backend.controller.request.copilot.CopilotDTO
+import plus.maa.backend.controller.request.copilot.CopilotRawDTO
 import plus.maa.backend.controller.request.copilot.CopilotQueriesRequest
 import plus.maa.backend.controller.request.copilot.CopilotRatingReq
 import plus.maa.backend.controller.response.MaaResultException
@@ -79,7 +81,29 @@ class CopilotService(
      * 将字符串解析为 [CopilotDTO], 检验敏感词并修正前端的冗余部分
      */
     private fun String.parseToCopilotDto() = try {
-        mapper.readValue(this, CopilotDTO::class.java)
+        val raw = mapper.readValue(this, CopilotRawDTO::class.java)
+        val actionsNode = raw.actionsNode
+        val legacyActions = if (actionsNode?.isArray == true) {
+            mapper.convertValue(actionsNode, object : TypeReference<List<Copilot.Action>>() {})
+        } else {
+            null
+        }
+        val simingActions = if (actionsNode?.isObject == true) {
+            mapper.convertValue(actionsNode, object : TypeReference<Map<String, Copilot.SimingAction>>(){})
+        } else {
+            null
+        }
+        CopilotDTO(
+            stageName = raw.stageName,
+            difficulty = raw.difficulty,
+            minimumRequired = raw.minimumRequired,
+            opers = raw.opers,
+            groups = raw.groups,
+            actions = legacyActions,
+            simingActions = simingActions,
+            doc = raw.doc,
+            notification = raw.notification,
+        )
     } catch (e: JsonProcessingException) {
         log.error(e) { "解析copilot失败" }
         throw MaaResultException("解析copilot失败")

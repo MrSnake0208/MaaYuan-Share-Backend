@@ -26,11 +26,18 @@
       }
     },
     "actions": {
-      "type": "array",
-      "description": "Actions in order, required. Will be executed sequentially.",
-      "items": {
-        "$ref": "#/definitions/action"
-      }
+      "description": "Actions definition. Supports legacy sequential array and Siming graph format.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/action"
+          }
+        },
+        {
+          "$ref": "#/definitions/siming_actions"
+        }
+      ]
     }
   },
   "required": [
@@ -286,6 +293,83 @@
           "type": "string",
           "description": "Action description color. Optional. Displayed on the UI with no effects"
         }
+      }
+    },
+    "siming_actions": {
+      "type": "object",
+      "description": "Siming graph actions keyed by node name.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/definitions/siming_action"
+      }
+    },
+    "siming_action": {
+      "type": "object",
+      "description": "Siming action node configuration.",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/definitions/int_tuple"
+        },
+        "begin": {
+          "$ref": "#/definitions/int_tuple"
+        },
+        "end": {
+          "$ref": "#/definitions/int_tuple"
+        },
+        "recognition": {
+          "type": "string"
+        },
+        "expected": {
+          "type": "string"
+        },
+        "roi": {
+          "$ref": "#/definitions/int_tuple"
+        },
+        "pre_delay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "post_delay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rear_delay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text_doc": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "green_mask": {
+          "type": "boolean"
+        },
+        "next": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "int_tuple": {
+      "type": "array",
+      "items": {
+        "type": "integer"
       }
     }
   }

@@ -1,5 +1,8 @@
 package plus.maa.backend.controller.request.copilot
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JsonNode
 import jakarta.validation.constraints.NotBlank
 import plus.maa.backend.repository.entity.Copilot
 
@@ -8,21 +11,30 @@ import plus.maa.backend.repository.entity.Copilot
  * Date  2023-01-10 19:50
  */
 data class CopilotDTO(
-    // 关卡名
     @field:NotBlank(message = "关卡名不能为空")
     var stageName: String,
-    // 难度
     val difficulty: Int = 0,
-    // 版本号(文档中说明:最低要求 maa 版本号，必选。保留字段)
     @field:NotBlank(message = "最低要求 maa 版本不可为空")
     val minimumRequired: String,
-    // 指定干员
     val opers: List<Copilot.Operators>? = null,
-    // 群组
     val groups: List<Copilot.Groups>? = null,
-    // 战斗中的操作
     val actions: List<Copilot.Action>? = null,
-    // 描述
+    val simingActions: Map<String, Copilot.SimingAction>? = null,
+    val doc: Copilot.Doc? = null,
+    val notification: Boolean = false,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class CopilotRawDTO(
+    @field:NotBlank(message = "关卡名不能为空")
+    var stageName: String,
+    val difficulty: Int = 0,
+    @field:NotBlank(message = "最低要求 maa 版本不可为空")
+    val minimumRequired: String,
+    val opers: List<Copilot.Operators>? = null,
+    val groups: List<Copilot.Groups>? = null,
+    @JsonProperty("actions")
+    val actionsNode: JsonNode? = null,
     val doc: Copilot.Doc? = null,
     val notification: Boolean = false,
 )
