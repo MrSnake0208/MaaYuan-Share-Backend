@@ -50,3 +50,6 @@ application-prod.yml
 /.data/
 
 *.http
+
+# local artifacts
+ZootPlusBackend-*.jar
