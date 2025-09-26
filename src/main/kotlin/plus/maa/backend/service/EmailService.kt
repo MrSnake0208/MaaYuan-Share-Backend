@@ -72,7 +72,7 @@ class EmailService(
         if (flagNoSend) {
             log.warn { "Email not sent, no-send enabled, vcode is $vCode" }
         } else {
-            val subject = "Maa Backend Center 验证码"
+            val subject = "MaaYuan 作业站 验证码"
             val dataModel = mapOf(
                 "content" to "mail-vCode.ftlh",
                 "obj" to vCode,
