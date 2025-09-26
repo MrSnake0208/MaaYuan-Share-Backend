@@ -1,5 +1,5 @@
 <h1 style=" font-size: 28px; margin: 0; padding: 0; color: #5c5c5c">
-    Maa Backend Center
+    MaaYuan 作业站
 </h1>
 <h2 style="padding-bottom: 3%; color: #5c5c5c; margin: 1% 0 0 0">
     验证你的账户

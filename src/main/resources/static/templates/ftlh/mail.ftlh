@@ -43,11 +43,11 @@
 
                 <div>
                     ※此邮件为自动发送，请不要回复此邮件<br>
-                    MAA Team<br>
+                    MaaYuan Team<br>
                     ·
                     <a style="color: #3777b0; text-decoration: none;"
-                       href="https://maa.plus/" target="_blank">
-                        MaaAssistantArknights
+                       href="https://maayuan.top/" target="_blank">
+                        MaaYuan
                     </a>
                 </div>
             </td>
