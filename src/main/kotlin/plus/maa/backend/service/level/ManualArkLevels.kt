@@ -13,6 +13,7 @@ object ManualArkLevels {
     )
 
     private val entries = listOf(
+        Entry("主线",catThree="其他"),
         Entry("兰台", catThree = "一期"),
         Entry("兰台", catThree = "二期"),
         Entry("兰台", catThree = "三期"),
@@ -101,7 +102,7 @@ object ManualArkLevels {
         Entry("白鹄", catThree = "26年11月"),
         Entry("白鹄", catThree = "26年12月"),
 
-        Entry("其他", catThree = "其他"),
+        Entry("其他", catThree = "其他")
     )
 
     val levels: List<ArkLevel> = entries.mapIndexed { index, entry ->
