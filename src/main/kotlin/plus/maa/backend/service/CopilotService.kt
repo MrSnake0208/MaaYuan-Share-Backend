@@ -131,17 +131,20 @@ class CopilotService(
     /**
      * 上传新的作业
      */
-    fun upload(loginUserId: String, request: CopilotCUDRequest): Long = copilotConverter.toCopilot(
-        request.content.parseToCopilotDto(),
-        idComponent.getId(Copilot.META),
-        loginUserId,
-        LocalDateTime.now(),
-        request.content,
-        request.status,
-    ).run {
-        copilotRepository.insert(this).copilotId!!.also {
-            segmentService.updateIndex(it, doc?.title, doc?.details)
+    fun upload(loginUserId: String, request: CopilotCUDRequest): Long {
+        val copilot = copilotConverter.toCopilot(
+            request.content.parseToCopilotDto(),
+            idComponent.getId(Copilot.META),
+            loginUserId,
+            LocalDateTime.now(),
+            request.content,
+            request.status,
+        )
+        val copilotId = copilotRepository.insert(copilot).copilotId!!.also { id ->
+            segmentService.updateIndex(id, copilot.doc?.title, copilot.doc?.details)
         }
+        resetHomePageCache()
+        return copilotId
     }
 
     /**
@@ -152,7 +155,7 @@ class CopilotService(
         deleteTime = LocalDateTime.now()
     }.apply {
         // 删除作业时，如果被删除的项在 Redis 首页缓存中存在，则清空对应的首页缓存
-        // 新增作业就不必，因为新作业显然不会那么快就登上热度榜和浏览量榜
+        // 上传流程已在入库后刷新缓存，这里保留删除时的兜底处理
         deleteCacheWhenMatchCopilotId(copilotId!!)
         Cache.invalidateCopilotInfoByCid(copilotId)
     }
@@ -580,6 +583,13 @@ class CopilotService(
             if (redisCache.valueMemberInSet(key, copilotId)) {
                 redisCache.removeCacheByPattern(pattern)
             }
+        }
+    }
+
+    private fun resetHomePageCache() {
+        HOME_PAGE_CACHE_CONFIG.keys.forEach { order ->
+            val pattern = String.format("home:%s:*", order)
+            redisCache.removeCacheByPattern(pattern)
         }
     }
 
