@@ -22,8 +22,8 @@ maa-copilot:
     title: ZOOT Plus Backend API
     description: ZOOT Plus Backend API
     version: v2.0.0
-    domain: https://prts.maa.plus
-    frontend-domain: https://prts.plus
+    domain: https://maa-backend-dev.maayuan.fun:16666
+    frontend-domain: https://share.maayuan.fun:16666/
   jwt:
     header: Authorization
     # 默认的JwtToken过期时间，以秒为单位
