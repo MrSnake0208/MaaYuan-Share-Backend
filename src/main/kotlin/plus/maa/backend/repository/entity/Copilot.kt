@@ -3,6 +3,13 @@ package plus.maa.backend.repository.entity
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.springframework.data.annotation.Id
@@ -162,7 +169,9 @@ class Copilot(
         var rearDelay: Int? = null,
         var duration: Int? = null,
         var textDoc: String? = null,
-        var template: String? = null,
+        @JsonDeserialize(using = TemplateListDeserializer::class)
+        @JsonSerialize(using = TemplateListSerializer::class)
+        var template: List<String>? = null,
         var timeout: Int? = null,
         var greenMask: Boolean? = null,
         var next: List<String>? = null,
@@ -195,5 +204,43 @@ class Copilot(
                 "copilotId",
                 Copilot::class.java,
             )
+    }
+}
+
+internal class TemplateListDeserializer : com.fasterxml.jackson.databind.JsonDeserializer<List<String>?>() {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): List<String>? {
+        val node: JsonNode? = p.codec.readTree(p)
+        if (node == null || node.isNull) {
+            return null
+        }
+        if (node.isTextual) {
+            return listOf(node.asText())
+        }
+        if (node.isArray) {
+            val results = mutableListOf<String>()
+            node.forEach { child ->
+                if (child.isTextual) {
+                    results += child.asText()
+                }
+            }
+            return if (results.isEmpty()) null else results
+        }
+        return null
+    }
+}
+
+internal class TemplateListSerializer : com.fasterxml.jackson.databind.JsonSerializer<List<String>?>() {
+    override fun serialize(value: List<String>?, gen: JsonGenerator, serializers: SerializerProvider) {
+        if (value.isNullOrEmpty()) {
+            gen.writeNull()
+            return
+        }
+        if (value.size == 1) {
+            gen.writeString(value.first())
+            return
+        }
+        gen.writeStartArray()
+        value.forEach { gen.writeString(it) }
+        gen.writeEndArray()
     }
 }

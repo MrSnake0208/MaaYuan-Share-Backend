@@ -348,7 +348,14 @@
           "type": "string"
         },
         "template": {
-          "type": "string"
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          ]
         },
         "timeout": {
           "type": "integer",
