@@ -7,9 +7,11 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.core.query.Update
 import org.springframework.data.support.PageableExecutionUtils
 import org.springframework.stereotype.Service
 import plus.maa.backend.common.controller.PagedDTO
+import plus.maa.backend.common.extensions.blankAsNull
 import plus.maa.backend.common.utils.IdComponent
 import plus.maa.backend.common.utils.converter.CopilotSetConverter
 import plus.maa.backend.controller.request.copilotset.CopilotSetCreateReq
@@ -19,18 +21,18 @@ import plus.maa.backend.controller.request.copilotset.CopilotSetUpdateReq
 import plus.maa.backend.controller.response.copilotset.CopilotSetListRes
 import plus.maa.backend.controller.response.copilotset.CopilotSetRes
 import plus.maa.backend.repository.CopilotSetRepository
+import plus.maa.backend.repository.RedisCache
 import plus.maa.backend.repository.UserFollowingRepository
+import plus.maa.backend.repository.entity.Copilot
 import plus.maa.backend.repository.entity.CopilotSet
 import plus.maa.backend.service.model.CopilotSetStatus
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.regex.Pattern
-import kotlin.math.*
-import plus.maa.backend.common.extensions.blankAsNull
-import plus.maa.backend.repository.entity.Copilot
-import plus.maa.backend.repository.RedisCache
-import org.springframework.data.mongodb.core.query.Update
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
+import kotlin.math.ln
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * @author dragove

@@ -22,9 +22,9 @@ import plus.maa.backend.common.utils.converter.CopilotConverter
 import plus.maa.backend.config.external.MaaCopilotProperties
 import plus.maa.backend.controller.request.copilot.CopilotCUDRequest
 import plus.maa.backend.controller.request.copilot.CopilotDTO
-import plus.maa.backend.controller.request.copilot.CopilotRawDTO
 import plus.maa.backend.controller.request.copilot.CopilotQueriesRequest
 import plus.maa.backend.controller.request.copilot.CopilotRatingReq
+import plus.maa.backend.controller.request.copilot.CopilotRawDTO
 import plus.maa.backend.controller.response.MaaResultException
 import plus.maa.backend.controller.response.copilot.ArkLevelInfo
 import plus.maa.backend.controller.response.copilot.CopilotInfo
@@ -89,7 +89,7 @@ class CopilotService(
             null
         }
         val simingActions = if (actionsNode?.isObject == true) {
-            mapper.convertValue(actionsNode, object : TypeReference<Map<String, Copilot.SimingAction>>(){})
+            mapper.convertValue(actionsNode, object : TypeReference<Map<String, Copilot.SimingAction>>() {})
         } else {
             null
         }
