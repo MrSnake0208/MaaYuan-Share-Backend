@@ -3,6 +3,7 @@ package plus.maa.backend.service
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -175,11 +176,16 @@ class CopilotService(
             val commentsCount = Cache.getCommentCountCache(copilot.copilotId!!) { cid ->
                 commentsAreaRepository.countByCopilotIdAndDelete(cid, false)
             }
-            copilot.format(
+            val info = copilot.format(
                 ratingService.findPersonalRatingOfCopilot(userIdOrIpAddress, id),
                 maaUser.userName,
                 commentsCount,
-            ) to it.view
+            )
+            // 仅详情接口做 editorv2 兼容：缺少 level 时由 stage_name/stageName/实体字段补齐
+            val compat = info.copy(
+                content = ensureEditorV2Level(info.content, copilot.stageName)
+            )
+            compat to it.view
         }
 
         return result?.apply {
@@ -571,6 +577,33 @@ class CopilotService(
         val copilot = copilotRepository.findByCopilotIdAndDeleteIsFalse(cId).requireNotNull { "copilot 不存在" }
         require(copilot.uploaderId == userId) { "您没有权限修改" }
         return copilot.apply(edit).run(copilotRepository::save)
+    }
+
+    /**
+     * editorv2 兼容：当 content 中缺少 level 字段时，
+     * 依次尝试从 stage_name、stageName、实体字段 stageName 补齐。
+     * 解析失败或无需补齐时返回原始 content。
+     */
+    private fun ensureEditorV2Level(content: String?, stageName: String?): String {
+        if (content.isNullOrBlank()) return content ?: ""
+        return try {
+            val node = mapper.readTree(content)
+            if (node is ObjectNode && !node.has("level")) {
+                val level = when {
+                    node.has("stage_name") && !node.get("stage_name").isNull -> node.get("stage_name").asText()
+                    node.has("stageName") && !node.get("stageName").isNull -> node.get("stageName").asText()
+                    !stageName.isNullOrBlank() -> stageName
+                    else -> null
+                }
+                if (!level.isNullOrBlank()) {
+                    node.put("level", level)
+                    return mapper.writeValueAsString(node)
+                }
+            }
+            content
+        } catch (e: Exception) {
+            content
+        }
     }
 
     /**

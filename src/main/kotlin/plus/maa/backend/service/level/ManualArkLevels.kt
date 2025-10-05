@@ -13,8 +13,9 @@ object ManualArkLevels {
     )
 
     private val entries = listOf(
-        Entry("主线", catThree = "其他"),
-        Entry("洞窟", catThree = "洞窟-左"),
+        Entry("主线",catThree = "其他"),
+        Entry("洞窟",catTwo="左", catThree = "阿茂灵花手作(25.10)"),
+        Entry("洞窟",catTwo="右", catThree = "自作主璋(25.10)"),
         Entry("兰台", catThree = "一期"),
         Entry("兰台", catThree = "二期"),
         Entry("兰台", catThree = "三期"),
