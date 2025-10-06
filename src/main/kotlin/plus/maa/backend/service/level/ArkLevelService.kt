@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets
 class ArkLevelService(
     private val arkLevelConverter: ArkLevelConverter,
     private val arkLevelConverterV2: ArkLevelConverterV2,
+    private val properties: plus.maa.backend.config.external.MaaCopilotProperties,
 ) {
     private val log = KotlinLogging.logger { }
     private val manualLevels: List<ArkLevel> = ManualArkLevels.levels
@@ -81,17 +82,25 @@ class ArkLevelService(
 
     private fun loadLevelsFromJson(): List<ArkLevel> {
         return try {
-            val resource = javaClass.classLoader.getResourceAsStream("levels/arknights-levels.v2.json")
-            if (resource != null) {
-                resource.use { input ->
-                    val json = input.readBytes().toString(StandardCharsets.UTF_8)
-                    val items: List<ArkLevel> = objectMapper.readValue(json)
-                    // 默认 game 填充为 “明日方舟”
-                    items.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
-                }
+            // 优先读取本地缓存文件
+            val cfg = properties.levels
+            val cacheFile = java.io.File(cfg.localCache)
+            if (cacheFile.exists()) {
+                val json = cacheFile.readText()
+                val items: List<ArkLevel> = objectMapper.readValue(json)
+                items.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
             } else {
-                log.warn { "levels/arknights-levels.v2.json not found in classpath, fallback to manualLevels" }
-                manualLevels.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                val resource = javaClass.classLoader.getResourceAsStream("levels/arknights-levels.v2.json")
+                if (resource != null) {
+                    resource.use { input ->
+                        val json = input.readBytes().toString(StandardCharsets.UTF_8)
+                        val items: List<ArkLevel> = objectMapper.readValue(json)
+                        items.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                    }
+                } else {
+                    log.warn { "levels/arknights-levels.v2.json not found in classpath, fallback to manualLevels" }
+                    manualLevels.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                }
             }
         } catch (e: Exception) {
             log.error(e) { "Failed to load levels from JSON, fallback to manualLevels" }

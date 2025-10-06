@@ -33,4 +33,6 @@ data class MaaCopilotProperties(
     var segmentInfo: SegmentInfo = SegmentInfo(),
     @NestedConfigurationProperty
     var webhook: Webhook = Webhook(),
+    @NestedConfigurationProperty
+    var levels: Levels = Levels(),
 )

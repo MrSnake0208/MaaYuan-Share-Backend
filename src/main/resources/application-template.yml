@@ -41,6 +41,19 @@ maa-copilot:
   task-cron:
     ark-level: "-"
     copilot-update: "-"
+  levels:
+    # 启用从 GitHub contents 拉取 v2 JSON（否则使用 classpath）
+    enable-github: false
+    # GitHub api token，匿名会受限速约 60 次/小时
+    token: github_pat_xxx
+    # 目标 repo 路径，形如 组织/仓库/分支
+    repo-and-branch: MaaAssistantArknights/MaaAssistantArknights/dev
+    # JSON 所在目录（相对于分支路径）
+    json-dir: resource/levels
+    # JSON 文件名
+    json-file: arknights-levels.v2.json
+    # 本地缓存文件路径
+    local-cache: ./data/levels/arknights-levels.v2.json
   mail:
     # 邮件通知
     notification: true

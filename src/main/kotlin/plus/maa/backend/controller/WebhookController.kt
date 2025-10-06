@@ -15,7 +15,11 @@ import plus.maa.backend.task.ArkLevelSyncTask
 @Tag(name = "Webhook")
 @RequestMapping(value = ["/webhook"], produces = ["application/json"])
 @RestController
-class WebhookController(properties: MaaCopilotProperties, private val levelTask: ArkLevelSyncTask) {
+class WebhookController(
+    properties: MaaCopilotProperties,
+    private val levelTask: ArkLevelSyncTask,
+    private val levelsV2SyncService: plus.maa.backend.service.level.LevelsV2SyncService,
+) {
     val apiKey = properties.webhook.levelSyncApiKey
 
     @RequireApiKey
@@ -30,6 +34,13 @@ class WebhookController(properties: MaaCopilotProperties, private val levelTask:
     suspend fun levelOpenStatusUpdate(request: HttpServletRequest) {
         request.checkApiKey()
         levelTask.updateOpenStatus()
+    }
+
+    @RequireApiKey
+    @PostMapping(value = ["/levels/v2/sync"])
+    suspend fun levelV2JsonSync(request: HttpServletRequest) {
+        request.checkApiKey()
+        levelsV2SyncService.syncOnce()
     }
 
     private fun HttpServletRequest.checkApiKey() {
