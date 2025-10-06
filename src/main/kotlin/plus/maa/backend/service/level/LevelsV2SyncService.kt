@@ -4,6 +4,8 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import plus.maa.backend.config.external.MaaCopilotProperties
 import plus.maa.backend.repository.GithubRepository
 import plus.maa.backend.repository.RedisCache
@@ -13,9 +15,9 @@ import java.nio.file.Path
 @Service
 class LevelsV2SyncService(
     private val properties: MaaCopilotProperties,
-    private val githubRepo: GithubRepository,
     private val redisCache: RedisCache,
     private val cacheManager: CacheManager,
+    private val objectMapper: ObjectMapper,
 ) {
     private val log = KotlinLogging.logger { }
     private val webClient: WebClient = WebClient.builder().build()
@@ -26,9 +28,9 @@ class LevelsV2SyncService(
             log.info { "levels v2 sync disabled; skip" }
             return false
         }
-        val token = bearerOrEmpty(cfg.token)
         val dir = cfg.jsonDir.trim('/',' ').ifEmpty { "" }
-        val contents = githubRepo.getContents(token, dir)
+        val (owner, repo, branch) = parseRepoAndBranch(cfg.repoAndBranch)
+        val contents = fetchContents(owner, repo, branch, dir, cfg.token)
         val target = contents.firstOrNull { it.isFile && it.name == cfg.jsonFile }
             ?: run {
                 log.warn { "levels v2 json not found in contents: dir=${cfg.jsonDir}, file=${cfg.jsonFile}" }
@@ -46,7 +48,12 @@ class LevelsV2SyncService(
             return false
         }
         log.info { "downloading levels v2 from $downloadUrl (sha=${target.sha})" }
-        val body = webClient.get().uri(downloadUrl).retrieve().bodyToMono(String::class.java).block()
+        val body = webClient
+            .get()
+            .uri(downloadUrl)
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
         if (body.isNullOrBlank()) {
             log.warn { "downloaded empty body; abort" }
             return false
@@ -61,5 +68,42 @@ class LevelsV2SyncService(
         return true
     }
 
-    private fun bearerOrEmpty(token: String): String = if (token.isBlank()) "" else "Bearer $token"
+    private fun parseRepoAndBranch(repoAndBranch: String): Triple<String, String, String> {
+        val parts = repoAndBranch.split('/')
+        require(parts.size >= 2) { "levels.repoAndBranch 格式错误，应为 owner/repo[/branch]" }
+        val owner = parts[0]
+        val repo = parts[1]
+        val branch = parts.getOrNull(2) ?: "main"
+        return Triple(owner, repo, branch)
+    }
+
+    private fun fetchContents(
+        owner: String,
+        repo: String,
+        branch: String,
+        path: String,
+        token: String,
+    ): List<plus.maa.backend.repository.entity.github.GithubContent> {
+        val encodedPath = java.net.URLEncoder.encode(path, java.nio.charset.StandardCharsets.UTF_8)
+        val url = if (path.isBlank())
+            "https://api.github.com/repos/$owner/$repo/contents?ref=$branch"
+        else
+            "https://api.github.com/repos/$owner/$repo/contents/$encodedPath?ref=$branch"
+
+        val text = webClient
+            .get()
+            .uri(url)
+            .headers { h ->
+                h.add("Accept", "application/vnd.github+json")
+                h.add("X-GitHub-Api-Version", "2022-11-28")
+                if (token.isNotBlank()) h.add("Authorization", "Bearer $token")
+            }
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
+            ?: "[]"
+
+        val listType = object : TypeReference<List<plus.maa.backend.repository.entity.github.GithubContent>>() {}
+        return objectMapper.readValue(text, listType)
+    }
 }
