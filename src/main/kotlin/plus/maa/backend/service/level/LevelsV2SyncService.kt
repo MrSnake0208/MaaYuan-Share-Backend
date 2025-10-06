@@ -84,8 +84,12 @@ class LevelsV2SyncService(
         path: String,
         token: String,
     ): List<plus.maa.backend.repository.entity.github.GithubContent> {
-        val encodedPath = java.net.URLEncoder.encode(path, java.nio.charset.StandardCharsets.UTF_8)
-        val url = if (path.isBlank())
+        // GitHub contents API 路径中的 "/" 不能整体编码；只对段进行编码再拼接
+        val normalized = path.trim('/')
+        val encodedPath = if (normalized.isBlank()) "" else normalized.split('/').joinToString("/") {
+            java.net.URLEncoder.encode(it, java.nio.charset.StandardCharsets.UTF_8)
+        }
+        val url = if (encodedPath.isBlank())
             "https://api.github.com/repos/$owner/$repo/contents?ref=$branch"
         else
             "https://api.github.com/repos/$owner/$repo/contents/$encodedPath?ref=$branch"
