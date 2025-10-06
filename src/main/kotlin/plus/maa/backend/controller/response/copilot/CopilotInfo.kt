@@ -10,6 +10,13 @@ data class CopilotInfo(
     val uploadTime: LocalDateTime,
     val uploaderId: String,
     val uploader: String,
+    // 去反推化的关卡元信息（可选，旧数据可能为空）
+    val stageId: String? = null,
+    val game: String? = null,
+    val name: String? = null,
+    val catOne: String? = null,
+    val catTwo: String? = null,
+    val catThree: String? = null,
     // 用于前端显示的格式化后的干员信息 [干员名]::[技能]
     val views: Long = 0,
     val hotScore: Double = 0.0,

@@ -141,6 +141,8 @@ class CopilotService(
             request.content,
             request.status,
         )
+        // 填充关卡冗余字段，避免前端反推
+        fillLevelMeta(copilot)
         val copilotId = copilotRepository.insert(copilot).copilotId!!.also { id ->
             segmentService.updateIndex(id, copilot.doc?.title, copilot.doc?.details)
         }
@@ -478,6 +480,8 @@ class CopilotService(
                 request.status,
             )
             uploadTime = LocalDateTime.now()
+            // 关卡变更后，重新填充冗余字段
+            fillLevelMeta(this)
         }.apply {
             Cache.invalidateCopilotInfoByCid(copilotId)
             segmentService.updateIndex(copilotId!!, doc?.title, doc?.details)
@@ -549,6 +553,12 @@ class CopilotService(
         uploadTime = uploadTime!!,
         uploaderId = uploaderId!!,
         uploader = userName,
+        stageId = stageId ?: stageName,
+        game = game,
+        name = name,
+        catOne = catOne,
+        catTwo = catTwo,
+        catThree = catThree,
         views = views,
         hotScore = hotScore,
         available = true,
@@ -603,6 +613,23 @@ class CopilotService(
             content
         } catch (e: Exception) {
             content
+        }
+    }
+
+    private fun fillLevelMeta(copilot: Copilot) {
+        val stage = copilot.stageName
+        val info = levelService.findLevelInfoV2ByKeyword(stage)
+        if (info != null) {
+            copilot.stageId = info.stageId
+            copilot.stageName = info.stageId // 维持旧字段含义
+            copilot.game = info.game
+            copilot.name = info.name
+            copilot.catOne = info.catOne
+            copilot.catTwo = info.catTwo
+            copilot.catThree = info.catThree
+        } else if (!stage.isNullOrBlank()) {
+            // 至少保证 stageId/stageName 一致
+            copilot.stageId = stage
         }
     }
 

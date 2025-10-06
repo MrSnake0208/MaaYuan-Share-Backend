@@ -1,0 +1,19 @@
+package plus.maa.backend.controller.response.copilot
+
+import java.io.Serializable
+
+/**
+ * v2 关卡信息，包含四层级（含 game）
+ */
+data class ArkLevelInfoV2(
+    val game: String,
+    val levelId: String,
+    val stageId: String,
+    val catOne: String,
+    val catTwo: String,
+    val catThree: String,
+    val name: String,
+    val width: Int = 0,
+    val height: Int = 0,
+) : Serializable
+

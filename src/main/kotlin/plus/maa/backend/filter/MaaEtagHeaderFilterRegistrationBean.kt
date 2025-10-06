@@ -59,6 +59,7 @@ class MaaEtagHeaderFilterRegistrationBean : FilterRegistrationBean<Filter>() {
         private val ETAG_URI =
             setOf(
                 "/arknights/level",
+                "/arknights/level/v2",
                 "/copilot/query",
             )
     }

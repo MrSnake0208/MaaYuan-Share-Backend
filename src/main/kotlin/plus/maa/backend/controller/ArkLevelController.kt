@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 import plus.maa.backend.controller.response.MaaResult
 import plus.maa.backend.controller.response.MaaResult.Companion.success
 import plus.maa.backend.controller.response.copilot.ArkLevelInfo
+import plus.maa.backend.controller.response.copilot.ArkLevelInfoV2
 import plus.maa.backend.service.level.ArkLevelService
 
 /**
@@ -22,4 +23,11 @@ class ArkLevelController(
     @ApiResponse(description = "关卡数据")
     @Operation(summary = "获取关卡数据")
     fun getLevels(): MaaResult<List<ArkLevelInfo>> = success(arkLevelService.arkLevelInfos)
+
+    @GetMapping("/arknights/level/v2")
+    @ApiResponse(description = "关卡数据（v2，四层级，JSON 数据源）")
+    @Operation(summary = "获取关卡数据（v2）")
+    fun getLevelsV2(): MaaResult<List<ArkLevelInfoV2>> = success(arknightsLevelsV2())
+
+    private fun arknightsLevelsV2(): List<ArkLevelInfoV2> = arkLevelService.arkLevelInfosV2
 }
