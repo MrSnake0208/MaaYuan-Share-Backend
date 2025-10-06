@@ -73,6 +73,13 @@ interface CopilotConverter {
     @Mapping(target = "uploader", source = "userName")
     @Mapping(target = "like", source = "copilot.likeCount")
     @Mapping(target = "dislike", source = "copilot.dislikeCount")
+    // 传递冗余的关卡元信息
+    @Mapping(target = "stageId", source = "copilot.stageId")
+    @Mapping(target = "game", source = "copilot.game")
+    @Mapping(target = "name", source = "copilot.name")
+    @Mapping(target = "catOne", source = "copilot.catOne")
+    @Mapping(target = "catTwo", source = "copilot.catTwo")
+    @Mapping(target = "catThree", source = "copilot.catThree")
     @Mapping(target = "commentsCount", conditionExpression = "java(commentsCount != null)")
     fun toCopilotInfo(copilot: Copilot, userName: String, copilotId: Long, commentsCount: Long?): CopilotInfo
 }
