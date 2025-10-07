@@ -43,8 +43,6 @@ class ArkLevelParserDelegate(holder: ArkGameDataHolder) {
             sha = sha,
             catThree = tilePos.code,
             name = tilePos.name,
-            width = tilePos.width,
-            height = tilePos.height,
         )
         return parseLevel(level, tilePos)
     }

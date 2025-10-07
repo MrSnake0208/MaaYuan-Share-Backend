@@ -29,8 +29,6 @@ data class ArkLevel(
     var catThree: String? = null,
     // 地图名, 例: 冬逝、爱国者之死
     val name: String? = null,
-    val width: Int = 0,
-    val height: Int = 0,
     // 只是服务器认为的当前版本地图是否开放
     var isOpen: Boolean? = null,
     // 非实际意义上的活动地图关闭时间，只是服务器认为的关闭时间

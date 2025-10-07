@@ -6,9 +6,7 @@
     "catThree": "0-1",
     "name": "试炼场",
     "levelId": "obt/main/level_main_00-01",
-    "stageId": "level_main_00-01",
-    "width": 10,
-    "height": 8
+    "stageId": "level_main_00-01"
   },
   {
     "game": "明日方舟",
@@ -17,9 +15,7 @@
     "catThree": "SW-EV-1",
     "name": "支援",
     "levelId": "activities/act4d0/level_act4d0_01",
-    "stageId": "level_act4d0_01",
-    "width": 12,
-    "height": 8
+    "stageId": "level_act4d0_01"
   },
   {
     "game": "明日方舟",
@@ -28,9 +24,6 @@
     "catThree": "M-1",
     "name": "初识",
     "levelId": "obt/memory/level_memory_kroos_1",
-    "stageId": "level_memory_kroos_1",
-    "width": 10,
-    "height": 8
+    "stageId": "level_memory_kroos_1"
   }
 ]
-

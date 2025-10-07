@@ -39,16 +39,59 @@ class ArkLevelService(
 
     fun queryLevelInfosByKeyword(keyword: String): List<ArkLevelInfo> {
         if (keyword.isBlank()) return emptyList()
-        return manualLevelInfos.filter { info ->
-            listOf(
+        val tokens = keyword.trim().split(" ", "\t").mapNotNull { it.takeIf { s -> s.isNotBlank() } }
+        if (tokens.isEmpty()) return emptyList()
+
+        fun matchesAllTokensV1(info: ArkLevelInfo): Boolean {
+            val fields = listOf(
                 info.levelId,
                 info.stageId,
                 info.catOne,
                 info.catTwo,
                 info.catThree,
                 info.name,
-            ).any { it.containsIgnoreCase(keyword) }
+            )
+            return tokens.all { tk -> fields.any { it.containsIgnoreCase(tk) } }
         }
+
+        fun matchesAllTokensV2(info: ArkLevelInfoV2): Boolean {
+            val fields = listOf(
+                info.game,
+                info.levelId,
+                info.stageId,
+                info.catOne,
+                info.catTwo,
+                info.catThree,
+                info.name,
+            )
+            return tokens.all { tk -> fields.any { it.contains(tk, ignoreCase = true) } }
+        }
+
+        val v1Matches = manualLevelInfos.filter(::matchesAllTokensV1)
+
+        // 将 v2 命中项转换为 v1 结构以复用后续流程（仅 stageId 被上游使用）
+        val v2MatchesAsV1: List<ArkLevelInfo> = arkLevelInfosV2
+            .asSequence()
+            .filter(::matchesAllTokensV2)
+            .map {
+                ArkLevelInfo(
+                    levelId = it.levelId,
+                    stageId = it.stageId,
+                    catOne = it.catOne,
+                    catTwo = it.catTwo,
+                    catThree = it.catThree,
+                    name = it.name,
+                )
+            }
+            .toList()
+
+        // 合并去重（按 stageId）
+        val seen = HashSet<String>()
+        val result = ArrayList<ArkLevelInfo>()
+        (v1Matches + v2MatchesAsV1).forEach { info ->
+            if (seen.add(info.stageId)) result += info
+        }
+        return result
     }
 
     suspend fun syncLevelData() {
@@ -79,6 +122,7 @@ class ArkLevelService(
 
     // ---------------- v2: 从 JSON 加载四层级（含 game） ----------------
     private val objectMapper = jacksonObjectMapper()
+        .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     private fun loadLevelsFromJson(): List<ArkLevel> {
         return try {
