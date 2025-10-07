@@ -529,23 +529,5 @@
     "name": "10 月洞窟右",
     "levelId": "ru_yuan/dong_ku/10_yue_dong_ku_you_01",
     "stageId": "10_yue_dong_ku_you_01"
-  },
-  {
-    "game": "代号鸢",
-    "catOne": "其他",
-    "catTwo": "自己自定义一下吧",
-    "catThree": "无",
-    "name": "自己自定义一下吧",
-    "levelId": "dai_hao_yuan/qi_ta/zi_ji_zi_ding_yi_yi_xia_ba_01",
-    "stageId": "zi_ji_zi_ding_yi_yi_xia_ba_01"
-  },
-  {
-    "game": "如鸢",
-    "catOne": "其他",
-    "catTwo": "自己自定义一下吧",
-    "catThree": "无",
-    "name": "自己自定义一下吧",
-    "levelId": "ru_yuan/qi_ta/zi_ji_zi_ding_yi_yi_xia_ba_02",
-    "stageId": "zi_ji_zi_ding_yi_yi_xia_ba_02"
   }
 ]
