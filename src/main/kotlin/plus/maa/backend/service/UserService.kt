@@ -21,6 +21,7 @@ import plus.maa.backend.repository.entity.MaaUser
 import plus.maa.backend.service.jwt.JwtExpiredException
 import plus.maa.backend.service.jwt.JwtInvalidException
 import plus.maa.backend.service.jwt.JwtService
+import plus.maa.backend.config.external.MaaCopilotProperties
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import plus.maa.backend.cache.InternalComposeCache as Cache
@@ -35,6 +36,7 @@ class UserService(
     private val passwordEncoder: PasswordEncoder,
     private val userDetailService: UserDetailServiceImpl,
     private val jwtService: JwtService,
+    private val maaCopilotProperties: MaaCopilotProperties,
 ) {
     private val log = KotlinLogging.logger { }
 
@@ -113,8 +115,17 @@ class UserService(
             "用户名已存在，请重新取个名字吧"
         }
 
-        // 校验验证码
-        emailService.verifyVCode(registerDTO.email, registerDTO.registrationToken)
+        // 邮箱验证码/注册码 二选一的校验逻辑
+        if (maaCopilotProperties.register.useRegistrationCode) {
+            val code = registerDTO.registrationCode?.trim().orEmpty()
+            check(code.isNotEmpty()) { "请输入注册码" }
+            val expected = maaCopilotProperties.register.registrationCode
+            check(expected.isNotBlank() && code == expected) { "注册码错误" }
+        } else {
+            // 兼容旧流程：按邮箱验证码校验
+            val token = registerDTO.registrationToken?.trim().orEmpty()
+            emailService.verifyVCode(registerDTO.email, token)
+        }
 
         val encoded = passwordEncoder.encode(registerDTO.password)
 
@@ -232,7 +243,12 @@ class UserService(
             log.info { "send registration token: user exists for email: ${regDTO.email}" }
             throw MaaResultException(MaaStatusCode.MAA_USER_EXISTS)
         }
-        // 发送验证码
+        // 当启用注册码注册时，隐藏邮箱验证码功能（不发送邮件）
+        if (maaCopilotProperties.register.useRegistrationCode) {
+            log.info { "registration by code enabled, skip sending email vcode for: ${regDTO.email}" }
+            return
+        }
+        // 发送验证码（邮箱验证码模式）
         emailService.sendVCode(regDTO.email)
     }
 

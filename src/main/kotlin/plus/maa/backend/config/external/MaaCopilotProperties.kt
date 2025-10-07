@@ -16,6 +16,8 @@ data class MaaCopilotProperties(
     @NestedConfigurationProperty
     var vcode: Vcode = Vcode(),
     @NestedConfigurationProperty
+    var register: Register = Register(),
+    @NestedConfigurationProperty
     var cache: Cache = Cache(),
     @NestedConfigurationProperty
     var taskCron: TaskCron = TaskCron(),

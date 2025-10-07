@@ -36,6 +36,11 @@ maa-copilot:
   vcode:
     #默认的验证码失效时间,以秒为单位
     expire: 600
+  register:
+    # 是否启用“注册码注册”模式（启用后将不再校验邮箱验证码）
+    useRegistrationCode: false
+    # 注册码（当启用注册码注册时，注册必须提供并与此值完全匹配）
+    registrationCode: ""
   cache:
     default-expire: 60
   task-cron:
