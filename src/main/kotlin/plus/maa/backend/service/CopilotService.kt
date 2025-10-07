@@ -103,6 +103,7 @@ class CopilotService(
             actions = legacyActions,
             simingActions = simingActions,
             doc = raw.doc,
+            levelMeta = raw.levelMeta,
             notification = raw.notification,
         )
     } catch (e: JsonProcessingException) {
@@ -110,6 +111,9 @@ class CopilotService(
         throw MaaResultException("解析copilot失败")
     }.apply {
         sensitiveWordService.validate(doc)
+        if (!levelMeta?.stageId.isNullOrBlank()) {
+            stageName = levelMeta!!.stageId!!
+        }
         // 去除 name 的冗余部分
         groups?.forEach { group: Copilot.Groups ->
             group.opers?.forEach { oper: OperationGroup ->
@@ -185,7 +189,7 @@ class CopilotService(
             )
             // 仅详情接口做 editorv2 兼容：缺少 level 时由 stage_name/stageName/实体字段补齐
             val compat = info.copy(
-                content = ensureEditorV2Level(info.content, copilot.stageName)
+                content = ensureEditorV2Level(info.content, copilot.stageName, copilot.levelMeta)
             )
             compat to it.view
         }
@@ -425,6 +429,7 @@ class CopilotService(
                 "groups" to copilot.groups,
                 "minimumRequired" to copilot.minimumRequired,
                 "difficulty" to copilot.difficulty,
+                "level_meta" to copilot.levelMeta,
             ).run(mapper::writeValueAsString)
             copilot.format(
                 null,
@@ -594,42 +599,83 @@ class CopilotService(
      * 依次尝试从 stage_name、stageName、实体字段 stageName 补齐。
      * 解析失败或无需补齐时返回原始 content。
      */
-    private fun ensureEditorV2Level(content: String?, stageName: String?): String {
+    private fun ensureEditorV2Level(content: String?, stageName: String?, levelMeta: Copilot.LevelMeta?): String {
         if (content.isNullOrBlank()) return content ?: ""
         return try {
             val node = mapper.readTree(content)
-            if (node is ObjectNode && !node.has("level")) {
+            if (node is ObjectNode) {
                 val level = when {
                     node.has("stage_name") && !node.get("stage_name").isNull -> node.get("stage_name").asText()
                     node.has("stageName") && !node.get("stageName").isNull -> node.get("stageName").asText()
                     !stageName.isNullOrBlank() -> stageName
                     else -> null
                 }
-                if (!level.isNullOrBlank()) {
+                if (!level.isNullOrBlank() && !node.has("level")) {
                     node.put("level", level)
-                    return mapper.writeValueAsString(node)
+                }
+                if (levelMeta != null && !node.has("level_meta")) {
+                    val metaNode = mapper.createObjectNode().apply {
+                        levelMeta.stageId?.let { put("stage_id", it) }
+                        levelMeta.levelId?.let { put("level_id", it) }
+                        levelMeta.name?.let { put("name", it) }
+                        levelMeta.game?.let { put("game", it) }
+                        levelMeta.catOne?.let { put("cat_one", it) }
+                        levelMeta.catTwo?.let { put("cat_two", it) }
+                        levelMeta.catThree?.let { put("cat_three", it) }
+                        levelMeta.width?.let { put("width", it) }
+                        levelMeta.height?.let { put("height", it) }
+                    }
+                    if (!metaNode.isEmpty) {
+                        node.set<ObjectNode>("level_meta", metaNode)
+                    }
                 }
             }
-            content
+            mapper.writeValueAsString(node)
         } catch (e: Exception) {
             content
         }
     }
 
     private fun fillLevelMeta(copilot: Copilot) {
-        val stage = copilot.stageName
-        val info = levelService.findLevelInfoV2ByKeyword(stage)
+        val explicitMeta = copilot.levelMeta
+        val explicitStageId = explicitMeta?.stageId?.takeIf { it.isNotBlank() }
+        val lookupKey = explicitStageId ?: copilot.stageName
+
+        val info = levelService.findLevelInfoV2ByKeyword(lookupKey)
         if (info != null) {
+            val mergedMeta = Copilot.LevelMeta(
+                stageId = info.stageId,
+                levelId = info.levelId,
+                name = info.name ?: explicitMeta?.name,
+                game = explicitMeta?.game ?: info.game,
+                catOne = explicitMeta?.catOne ?: info.catOne,
+                catTwo = explicitMeta?.catTwo ?: info.catTwo,
+                catThree = explicitMeta?.catThree ?: info.catThree,
+                width = explicitMeta?.width,
+                height = explicitMeta?.height,
+            )
             copilot.stageId = info.stageId
             copilot.stageName = info.stageId // 维持旧字段含义
-            copilot.game = info.game
-            copilot.name = info.name
-            copilot.catOne = info.catOne
-            copilot.catTwo = info.catTwo
-            copilot.catThree = info.catThree
-        } else if (!stage.isNullOrBlank()) {
-            // 至少保证 stageId/stageName 一致
-            copilot.stageId = stage
+            copilot.game = mergedMeta.game
+            copilot.name = mergedMeta.name
+            copilot.catOne = mergedMeta.catOne
+            copilot.catTwo = mergedMeta.catTwo
+            copilot.catThree = mergedMeta.catThree
+            copilot.levelMeta = mergedMeta
+        } else {
+            val fallbackStage = lookupKey?.takeIf { it.isNotBlank() }
+            if (!fallbackStage.isNullOrBlank()) {
+                copilot.stageId = fallbackStage
+                copilot.stageName = fallbackStage
+            }
+            if (explicitMeta != null) {
+                copilot.levelMeta = explicitMeta.copy(stageId = fallbackStage ?: explicitMeta.stageId)
+                copilot.game = explicitMeta.game
+                copilot.name = explicitMeta.name
+                copilot.catOne = explicitMeta.catOne
+                copilot.catTwo = explicitMeta.catTwo
+                copilot.catThree = explicitMeta.catThree
+            }
         }
     }
 

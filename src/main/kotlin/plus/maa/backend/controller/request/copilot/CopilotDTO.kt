@@ -1,5 +1,6 @@
 package plus.maa.backend.controller.request.copilot
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
@@ -21,6 +22,9 @@ data class CopilotDTO(
     val actions: List<Copilot.Action>? = null,
     val simingActions: Map<String, Copilot.SimingAction>? = null,
     val doc: Copilot.Doc? = null,
+    @JsonProperty("level_meta")
+    @JsonAlias("levelMeta")
+    val levelMeta: Copilot.LevelMeta? = null,
     val notification: Boolean = false,
 )
 
@@ -36,5 +40,8 @@ data class CopilotRawDTO(
     @JsonProperty("actions")
     val actionsNode: JsonNode? = null,
     val doc: Copilot.Doc? = null,
+    @JsonProperty("level_meta")
+    @JsonAlias("levelMeta")
+    val levelMeta: Copilot.LevelMeta? = null,
     val notification: Boolean = false,
 )

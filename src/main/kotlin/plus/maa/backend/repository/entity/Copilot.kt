@@ -37,6 +37,7 @@ data class Copilot(
     var catThree: String? = null,
     var difficulty: Int? = null,
     var minimumRequired: String? = null,
+    var levelMeta: LevelMeta? = null,
 
     // 作者/时间
     var uploaderId: String? = null,
@@ -105,5 +106,18 @@ data class Copilot(
     data class Doc(
         var title: String? = null,
         var details: String? = null,
+    ) : Serializable
+
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+    data class LevelMeta(
+        var stageId: String? = null,
+        var levelId: String? = null,
+        var name: String? = null,
+        var game: String? = null,
+        var catOne: String? = null,
+        var catTwo: String? = null,
+        var catThree: String? = null,
+        var width: Int? = null,
+        var height: Int? = null,
     ) : Serializable
 }
