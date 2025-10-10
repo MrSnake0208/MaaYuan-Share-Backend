@@ -497,36 +497,36 @@
   {
     "game": "代号鸢",
     "catOne": "洞窟",
-    "catTwo": "10 月洞窟左",
+    "catTwo": "2025年10月洞窟左左",
     "catThree": "左",
-    "name": "10 月洞窟左",
+    "name": "2025年10月洞窟左左",
     "levelId": "dai_hao_yuan/dong_ku/10_yue_dong_ku_zuo",
     "stageId": "10_yue_dong_ku_zuo"
   },
   {
     "game": "代号鸢",
     "catOne": "洞窟",
-    "catTwo": "10 月洞窟右",
+    "catTwo": "2025年10月洞窟左右",
     "catThree": "右",
-    "name": "10 月洞窟右",
+    "name": "2025年10月洞窟左右",
     "levelId": "dai_hao_yuan/dong_ku/10_yue_dong_ku_you",
     "stageId": "10_yue_dong_ku_you"
   },
   {
     "game": "如鸢",
     "catOne": "洞窟",
-    "catTwo": "10 月洞窟左",
+    "catTwo": "2025年10月洞窟左左",
     "catThree": "左",
-    "name": "10 月洞窟左",
+    "name": "2025年10月洞窟左左",
     "levelId": "ru_yuan/dong_ku/10_yue_dong_ku_zuo_01",
     "stageId": "10_yue_dong_ku_zuo_01"
   },
   {
     "game": "如鸢",
     "catOne": "洞窟",
-    "catTwo": "10 月洞窟右",
+    "catTwo": "2025年10月洞窟左右",
     "catThree": "右",
-    "name": "10 月洞窟右",
+    "name": "2025年10月洞窟左右",
     "levelId": "ru_yuan/dong_ku/10_yue_dong_ku_you_01",
     "stageId": "10_yue_dong_ku_you_01"
   },
