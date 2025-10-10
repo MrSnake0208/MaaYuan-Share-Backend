@@ -16,7 +16,7 @@ class LevelsV2SyncTask(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val flag = AtomicBoolean(false)
 
-    @Scheduled(cron = "0 0 5 * * ?", zone = "Asia/Shanghai")
+    @Scheduled(cron = "0 0/10 * * * ?", zone = "Asia/Shanghai")
     fun scheduledSync() {
         if (flag.compareAndSet(false, true)) {
             scope.launch {
@@ -25,4 +25,3 @@ class LevelsV2SyncTask(
         }
     }
 }
-
