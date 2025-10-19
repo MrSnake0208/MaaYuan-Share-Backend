@@ -53,3 +53,7 @@ application-prod.yml
 
 # local artifacts
 ZootPlusBackend-*.jar
+
+# nix flake
+.direnv/
+data/*
