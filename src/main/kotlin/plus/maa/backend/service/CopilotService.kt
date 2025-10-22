@@ -2,6 +2,7 @@ package plus.maa.backend.service
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -376,7 +377,7 @@ class CopilotService(
         }
 
         // 去除large fields
-        queryObj.fields().exclude("content", "actions")
+        queryObj.fields().exclude("actions")
 
         val countQueryObj = Query.of(queryObj)
         // 分页排序查询
@@ -422,15 +423,7 @@ class CopilotService(
         // 新版评分系统
         // 反正目前首页和搜索不会直接展示当前用户有没有点赞，干脆直接不查，要用户点进作业才显示自己是否点赞
         val infos = copilots.map { copilot ->
-            copilot.content = mapOf(
-                "stageName" to copilot.stageName,
-                "doc" to copilot.doc,
-                "opers" to copilot.opers,
-                "groups" to copilot.groups,
-                "minimumRequired" to copilot.minimumRequired,
-                "difficulty" to copilot.difficulty,
-                "level_meta" to copilot.levelMeta,
-            ).run(mapper::writeValueAsString)
+            copilot.content = copilot.buildListContent()
             copilot.format(
                 null,
                 maaUsers.getOrDefault(copilot.uploaderId!!, MaaUser.UNKNOWN).userName,
@@ -466,6 +459,91 @@ class CopilotService(
         }
         return data
     }
+
+    private fun Copilot.buildListContent(): String {
+        val fallback = buildFallbackContent()
+        val raw = content ?: return fallback
+        return try {
+            val node = mapper.readTree(raw)
+            if (node !is ObjectNode) {
+                ensureEditorV2Level(raw, stageName, levelMeta).ifBlank { fallback }
+            } else {
+                fun ObjectNode.ensureText(field: String, value: String?) {
+                    if (!value.isNullOrBlank() && !hasNonNull(field)) {
+                        put(field, value)
+                    }
+                }
+                val stage = stageName ?: stageId
+                node.ensureText("stage_name", stage)
+                node.ensureText("stageName", stage)
+
+                minimumRequired?.let { required ->
+                    if (!node.hasNonNull("minimum_required")) node.put("minimum_required", required)
+                    if (!node.hasNonNull("minimumRequired")) node.put("minimumRequired", required)
+                }
+                difficulty?.let { diff ->
+                    if (!node.hasNonNull("difficulty")) node.put("difficulty", diff)
+                }
+                node.put("notification", notification)
+
+                doc?.let { docEntity ->
+                    val docNode = (node.get("doc") as? ObjectNode) ?: mapper.createObjectNode()
+                    docEntity.title?.let { if (!docNode.hasNonNull("title")) docNode.put("title", it) }
+                    docEntity.details?.let { if (!docNode.hasNonNull("details")) docNode.put("details", it) }
+                    if (docNode.size() > 0) {
+                        node.set<ObjectNode>("doc", docNode)
+                    }
+                }
+
+                levelMeta?.let { meta ->
+                    val metaNode = (node.get("level_meta") as? ObjectNode) ?: mapper.createObjectNode()
+                    meta.stageId?.let { if (!metaNode.hasNonNull("stage_id")) metaNode.put("stage_id", it) }
+                    meta.levelId?.let { if (!metaNode.hasNonNull("level_id")) metaNode.put("level_id", it) }
+                    meta.name?.let { if (!metaNode.hasNonNull("name")) metaNode.put("name", it) }
+                    meta.game?.let { if (!metaNode.hasNonNull("game")) metaNode.put("game", it) }
+                    meta.catOne?.let { if (!metaNode.hasNonNull("cat_one")) metaNode.put("cat_one", it) }
+                    meta.catTwo?.let { if (!metaNode.hasNonNull("cat_two")) metaNode.put("cat_two", it) }
+                    meta.catThree?.let { if (!metaNode.hasNonNull("cat_three")) metaNode.put("cat_three", it) }
+                    meta.width?.let { if (!metaNode.hasNonNull("width")) metaNode.put("width", it) }
+                    meta.height?.let { if (!metaNode.hasNonNull("height")) metaNode.put("height", it) }
+                    if (metaNode.size() > 0) {
+                        node.set<ObjectNode>("level_meta", metaNode)
+                    }
+                }
+
+                if (!node.has("opers") && opers != null) {
+                    node.set<JsonNode>("opers", mapper.valueToTree(opers))
+                }
+                if (!node.has("groups") && groups != null) {
+                    node.set<JsonNode>("groups", mapper.valueToTree(groups))
+                }
+                if (!node.has("siming_actions") && !node.has("actions") && simingActions != null) {
+                    node.set<JsonNode>("siming_actions", mapper.valueToTree(simingActions))
+                }
+
+                val merged = mapper.writeValueAsString(node)
+                ensureEditorV2Level(merged, stageName, levelMeta)
+            }
+        } catch (e: Exception) {
+            log.warn(e) { "构建列表 content 失败, copilotId=$copilotId" }
+            ensureEditorV2Level(raw, stageName, levelMeta).ifBlank { fallback }
+        }
+    }
+
+    private fun Copilot.buildFallbackContent(): String = ensureEditorV2Level(
+        mapOf(
+            "stageName" to stageName,
+            "doc" to doc,
+            "opers" to opers,
+            "groups" to groups,
+            "minimumRequired" to minimumRequired,
+            "difficulty" to difficulty,
+            "level_meta" to levelMeta,
+            "notification" to notification,
+        ).run(mapper::writeValueAsString),
+        stageName,
+        levelMeta,
+    )
 
     /**
      * 增量更新
