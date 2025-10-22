@@ -549,13 +549,9 @@ class CopilotService(
      * 增量更新
      */
     fun update(loginUserId: String, request: CopilotCUDRequest) {
-        var cIdToDeleteCache: Long? = null
-
-        userEditCopilot(loginUserId, request.id) {
+        val updatedCopilot = userEditCopilot(loginUserId, request.id) {
             segmentService.removeIndex(copilotId!!, doc?.title, doc?.details)
 
-            // 从公开改为隐藏时，如果数据存在缓存中则需要清除缓存
-            if (status == CopilotSetStatus.PUBLIC && request.status == CopilotSetStatus.PRIVATE) cIdToDeleteCache = copilotId
             copilotConverter.updateCopilotFromDto(
                 request.content.parseToCopilotDto(),
                 request.content,
@@ -570,9 +566,7 @@ class CopilotService(
             segmentService.updateIndex(copilotId!!, doc?.title, doc?.details)
         }
 
-        cIdToDeleteCache?.let {
-            deleteCacheWhenMatchCopilotId(it)
-        }
+        deleteCacheWhenMatchCopilotId(updatedCopilot.copilotId!!)
     }
 
     /**
