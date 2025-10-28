@@ -10,6 +10,15 @@
   },
   {
     "game": "代号鸢",
+    "catOne": "白鹄",
+    "catTwo": "2025 年 11 月",
+    "catThree": "无",
+    "name": "2025 年 11 月",
+    "levelId": "dai_hao/bai_gu/2_0_2_5_nian_1_1",
+    "stageId": "2_0_2_5_nian_1_1"
+  },
+  {
+    "game": "代号鸢",
     "catOne": "地宫",
     "catTwo": "欲追日影",
     "catThree": "无",
@@ -181,6 +190,24 @@
   },
   {
     "game": "代号鸢",
+    "catOne": "洞窟",
+    "catTwo": "2025年11月洞窟左",
+    "catThree": "左",
+    "name": "2025年11月洞窟左",
+    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku_02",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_02"
+  },
+  {
+    "game": "代号鸢",
+    "catOne": "洞窟",
+    "catTwo": "2025年11月洞窟右",
+    "catThree": "右",
+    "name": "2025年11月洞窟右",
+    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku_03",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_03"
+  },
+  {
+    "game": "代号鸢",
     "catOne": "家具",
     "catTwo": "春山重重",
     "catThree": "无",
@@ -259,6 +286,15 @@
     "name": "2025 年 10 月",
     "levelId": "ru_yuan/bai_gu/2025_nian_10_yue_01",
     "stageId": "2025_nian_10_yue_01"
+  },
+  {
+    "game": "如鸢",
+    "catOne": "白鹄",
+    "catTwo": "2025 年 11 月",
+    "catThree": "无",
+    "name": "2025 年 11 月",
+    "levelId": "ru/bai_gu/2_0_2_5_nian_1_1_01",
+    "stageId": "2_0_2_5_nian_1_1_01"
   },
   {
     "game": "如鸢",
@@ -424,6 +460,24 @@
   },
   {
     "game": "如鸢",
+    "catOne": "洞窟",
+    "catTwo": "2025年11月洞窟左",
+    "catThree": "左",
+    "name": "2025年11月洞窟左",
+    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku"
+  },
+  {
+    "game": "如鸢",
+    "catOne": "洞窟",
+    "catTwo": "2025年11月洞窟右",
+    "catThree": "右",
+    "name": "2025年11月洞窟右",
+    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku_01",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_01"
+  },
+  {
+    "game": "如鸢",
     "catOne": "活动",
     "catTwo": "三国志魂魂版",
     "catThree": "无",
@@ -556,5 +610,122 @@
     "name": "自己自定义一下吧",
     "levelId": "tong_yong/zhu_xian/zi_ji_zi_ding_yi_yi_xia_ba",
     "stageId": "zi_ji_zi_ding_yi_yi_xia_ba"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "10-12",
+    "catThree": "无",
+    "name": "10-12",
+    "levelId": "tong/xian/1_0_-_1_2",
+    "stageId": "1_0_-_1_2"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "10-15",
+    "catThree": "无",
+    "name": "10-15",
+    "levelId": "tong/xian/1_0_-_1_5",
+    "stageId": "1_0_-_1_5"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "10-23",
+    "catThree": "无",
+    "name": "10-23",
+    "levelId": "tong/xian/1_0_-_2_3",
+    "stageId": "1_0_-_2_3"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "10-5",
+    "catThree": "无",
+    "name": "10-5",
+    "levelId": "tong/xian/1_0_-_5",
+    "stageId": "1_0_-_5"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "11-12",
+    "catThree": "无",
+    "name": "11-12",
+    "levelId": "tong/xian/1_1_-_1_2",
+    "stageId": "1_1_-_1_2"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "11-16",
+    "catThree": "无",
+    "name": "11-16",
+    "levelId": "tong/xian/1_1_-_1_6",
+    "stageId": "1_1_-_1_6"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "11-20",
+    "catThree": "无",
+    "name": "11-20",
+    "levelId": "tong/xian/1_1_-_2_0",
+    "stageId": "1_1_-_2_0"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "11-8",
+    "catThree": "无",
+    "name": "11-8",
+    "levelId": "tong/xian/1_1_-_8",
+    "stageId": "1_1_-_8"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "12-11",
+    "catThree": "无",
+    "name": "12-11",
+    "levelId": "tong/xian/1_2_-_1_1",
+    "stageId": "1_2_-_1_1"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "12-15",
+    "catThree": "无",
+    "name": "12-15",
+    "levelId": "tong/xian/1_2_-_1_5",
+    "stageId": "1_2_-_1_5"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "12-18",
+    "catThree": "无",
+    "name": "12-18",
+    "levelId": "tong/xian/1_2_-_1_8",
+    "stageId": "1_2_-_1_8"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "12-22",
+    "catThree": "无",
+    "name": "12-22",
+    "levelId": "tong/xian/1_2_-_2_2",
+    "stageId": "1_2_-_2_2"
+  },
+  {
+    "game": "通用",
+    "catOne": "主线",
+    "catTwo": "12-8",
+    "catThree": "无",
+    "name": "12-8",
+    "levelId": "tong/xian/1_2_-_8",
+    "stageId": "1_2_-_8"
   }
 ]
