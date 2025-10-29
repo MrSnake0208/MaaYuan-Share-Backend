@@ -72,6 +72,7 @@ data class Copilot(
     var actions: List<Action>? = null,
     var simingActions: Map<String, SimingAction>? = null,
     var doc: Doc? = null,
+    var metadata: Metadata? = null,
 ): Serializable {
     companion object {
         @JvmStatic
@@ -106,6 +107,14 @@ data class Copilot(
     data class Doc(
         var title: String? = null,
         var details: String? = null,
+    ) : Serializable
+
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+    data class Metadata(
+        var sourceType: String? = null,
+        var repostAuthor: String? = null,
+        var repostPlatform: String? = null,
+        var repostUrl: String? = null,
     ) : Serializable
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)

@@ -1,5 +1,8 @@
 package plus.maa.backend.controller.response.copilot
 
+import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 import plus.maa.backend.service.model.CommentStatus
 import plus.maa.backend.service.model.CopilotSetStatus
 import java.io.Serializable
@@ -31,4 +34,17 @@ data class CopilotInfo(
     val dislike: Long = 0,
     val commentStatus: CommentStatus = CommentStatus.ENABLED,
     val status: CopilotSetStatus = CopilotSetStatus.PUBLIC,
+    val metadata: CopilotMetadataInfo = CopilotMetadataInfo(),
+) : Serializable
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+data class CopilotMetadataInfo(
+    @JsonAlias("sourceType")
+    val sourceType: String = "original",
+    @JsonAlias("repostAuthor")
+    val repostAuthor: String? = null,
+    @JsonAlias("repostPlatform")
+    val repostPlatform: String? = null,
+    @JsonAlias("repostUrl")
+    val repostUrl: String? = null,
 ) : Serializable

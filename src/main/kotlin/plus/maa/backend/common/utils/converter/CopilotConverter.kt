@@ -39,6 +39,7 @@ interface CopilotConverter {
     @Mapping(target = "ratingRatio", ignore = true)
     @Mapping(target = "ratingLevel", ignore = true)
     @Mapping(target = "commentStatus", ignore = true)
+    @Mapping(target = "metadata", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     fun updateCopilotFromDto(copilotDTO: CopilotDTO, content: String, @MappingTarget copilot: Copilot, status: CopilotSetStatus)
 
@@ -55,6 +56,7 @@ interface CopilotConverter {
     @Mapping(target = "firstUploadTime", source = "now")
     @Mapping(target = "uploaderId", source = "userId")
     @Mapping(target = "commentStatus", ignore = true)
+    @Mapping(target = "metadata", ignore = true)
     fun toCopilot(
         copilotDto: CopilotDTO,
         copilotId: Long,
@@ -81,5 +83,6 @@ interface CopilotConverter {
     @Mapping(target = "catTwo", source = "copilot.catTwo")
     @Mapping(target = "catThree", source = "copilot.catThree")
     @Mapping(target = "commentsCount", conditionExpression = "java(commentsCount != null)")
+    @Mapping(target = "metadata", ignore = true)
     fun toCopilotInfo(copilot: Copilot, userName: String, copilotId: Long, commentsCount: Long?): CopilotInfo
 }

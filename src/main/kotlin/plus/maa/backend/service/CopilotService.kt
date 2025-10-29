@@ -26,10 +26,12 @@ import plus.maa.backend.controller.request.copilot.CopilotDTO
 import plus.maa.backend.controller.request.copilot.CopilotQueriesRequest
 import plus.maa.backend.controller.request.copilot.CopilotRatingReq
 import plus.maa.backend.controller.request.copilot.CopilotRawDTO
+import plus.maa.backend.controller.request.copilot.CopilotMetadataRequest
 import plus.maa.backend.controller.response.MaaResultException
 import plus.maa.backend.controller.response.copilot.ArkLevelInfo
 import plus.maa.backend.controller.response.copilot.CopilotInfo
 import plus.maa.backend.controller.response.copilot.CopilotPageInfo
+import plus.maa.backend.controller.response.copilot.CopilotMetadataInfo
 import plus.maa.backend.repository.CommentsAreaRepository
 import plus.maa.backend.repository.CopilotRepository
 import plus.maa.backend.repository.RedisCache
@@ -145,6 +147,7 @@ class CopilotService(
             request.content,
             request.status,
         )
+        copilot.metadata = request.metadata?.toEntityMetadata()
         // 填充关卡冗余字段，避免前端反推
         fillLevelMeta(copilot)
         val copilotId = copilotRepository.insert(copilot).copilotId!!.also { id ->
@@ -487,6 +490,9 @@ class CopilotService(
             uploadTime = LocalDateTime.now()
             // 关卡变更后，重新填充冗余字段
             fillLevelMeta(this)
+            request.metadata?.let {
+                metadata = it.toEntityMetadata()
+            }
         }.apply {
             Cache.invalidateCopilotInfoByCid(copilotId)
             segmentService.updateIndex(copilotId!!, doc?.title, doc?.details)
@@ -577,6 +583,7 @@ class CopilotService(
         like = likeCount,
         dislike = dislikeCount,
         status = status,
+        metadata = metadata.toResponseMetadata(),
     )
 
     fun notificationStatus(userId: String, copilotId: Long, status: Boolean) = userEditCopilot(userId, copilotId) {
@@ -592,6 +599,36 @@ class CopilotService(
         val copilot = copilotRepository.findByCopilotIdAndDeleteIsFalse(cId).requireNotNull { "copilot 不存在" }
         require(copilot.uploaderId == userId) { "您没有权限修改" }
         return copilot.apply(edit).run(copilotRepository::save)
+    }
+
+    private fun Copilot.Metadata?.toResponseMetadata(): CopilotMetadataInfo {
+        val entity = this ?: return CopilotMetadataInfo()
+        return CopilotMetadataInfo(
+            sourceType = normalizeSourceType(entity.sourceType),
+            repostAuthor = entity.repostAuthor,
+            repostPlatform = entity.repostPlatform,
+            repostUrl = entity.repostUrl,
+        )
+    }
+
+    private fun CopilotMetadataRequest.toEntityMetadata(): Copilot.Metadata {
+        return Copilot.Metadata(
+            sourceType = normalizeSourceType(sourceType),
+            repostAuthor = sanitize(repostAuthor),
+            repostPlatform = sanitize(repostPlatform),
+            repostUrl = sanitize(repostUrl),
+        )
+    }
+
+    private fun normalizeSourceType(source: String?): String {
+        return when (source?.lowercase()) {
+            "repost" -> "repost"
+            else -> "original"
+        }
+    }
+
+    private fun sanitize(value: String?): String? {
+        return value?.trim()?.takeIf { it.isNotEmpty() }
     }
 
     /**
