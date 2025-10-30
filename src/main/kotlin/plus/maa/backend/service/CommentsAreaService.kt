@@ -56,11 +56,13 @@ class CommentsAreaService(
         val copilotId = commentsAddDTO.copilotId
         val copilot = copilotRepository.findByCopilotId(copilotId).requireNotNull { "作业不存在" }
 
-        if (copilot.commentStatus == CommentStatus.DISABLED && userId != copilot.uploaderId) {
+        val isManager = userId == copilot.uploaderId || userService.hasAdminPrivileges(userId)
+
+        if (copilot.commentStatus == CommentStatus.DISABLED && !isManager) {
             throw MaaResultException("评论区已被禁用")
         }
 
-        if (userId != copilot.uploaderId) {
+        if (!isManager) {
             require(commentsAddDTO.message.length <= 150) { "评论内容不可超过150字，请删减" }
         }
 
@@ -106,7 +108,10 @@ class CommentsAreaService(
         val commentsArea = requireCommentsAreaById(commentsId)
         // 允许作者删除评论
         val copilot = copilotRepository.findByCopilotId(commentsArea.copilotId)
-        require(userId == copilot?.uploaderId || userId == commentsArea.uploaderId) { "您无法删除不属于您的评论" }
+        val isOwner = userId == copilot?.uploaderId
+        val isCommentAuthor = userId == commentsArea.uploaderId
+        val isAdmin = userService.hasAdminPrivileges(userId)
+        require(isOwner || isCommentAuthor || isAdmin) { "您无法删除不属于您的评论" }
 
         val now = LocalDateTime.now()
         commentsArea.delete = true
@@ -158,7 +163,9 @@ class CommentsAreaService(
         val commentsArea = requireCommentsAreaById(commentsToppingDTO.commentId)
         // 只允许作者置顶评论
         val copilot = copilotRepository.findByCopilotId(commentsArea.copilotId)
-        require(userId == copilot?.uploaderId) { "只有作者才能置顶评论" }
+        val isOwner = userId == copilot?.uploaderId
+        val isAdmin = userService.hasAdminPrivileges(userId)
+        require(isOwner || isAdmin) { "只有作者才能置顶评论" }
 
         commentsArea.topping = commentsToppingDTO.topping
         commentsAreaRepository.save(commentsArea)
@@ -254,7 +261,9 @@ class CommentsAreaService(
 
     fun notificationStatus(userId: String, id: String, status: Boolean) {
         val commentsArea = requireCommentsAreaById(id)
-        require(userId == commentsArea.uploaderId) { "您没有权限修改" }
+        val isOwner = userId == commentsArea.uploaderId
+        val isAdmin = userService.hasAdminPrivileges(userId)
+        require(isOwner || isAdmin) { "您没有权限修改" }
         commentsArea.notification = status
         commentsAreaRepository.save(commentsArea)
     }

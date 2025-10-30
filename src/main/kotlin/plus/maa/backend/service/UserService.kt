@@ -262,6 +262,11 @@ class UserService(
         return userRepository.findAllById(ids).let(::UserDict)
     }
 
+    fun hasAdminPrivileges(userId: String?): Boolean {
+        if (userId.isNullOrBlank()) return false
+        return findByUserIdOrDefaultInCache(userId).status >= ADMIN_STATUS
+    }
+
     class UserDict(users: List<MaaUser>) {
         private val userMap = users.associateBy { it.userId!! }
         fun entries() = userMap.entries
@@ -281,5 +286,9 @@ class UserService(
     @Suppress("unused")
     private fun isAllChinese(input: String): Boolean {
         return input.all { it in '\u4e00'..'\u9fa5' }
+    }
+
+    companion object {
+        const val ADMIN_STATUS = 2
     }
 }

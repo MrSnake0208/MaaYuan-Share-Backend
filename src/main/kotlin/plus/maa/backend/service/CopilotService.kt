@@ -597,7 +597,9 @@ class CopilotService(
     fun userEditCopilot(userId: String?, copilotId: Long?, edit: Copilot.() -> Unit): Copilot {
         val cId = copilotId.requireNotNull { "copilotId 不能为空" }
         val copilot = copilotRepository.findByCopilotIdAndDeleteIsFalse(cId).requireNotNull { "copilot 不存在" }
-        require(copilot.uploaderId == userId) { "您没有权限修改" }
+        val isOwner = copilot.uploaderId == userId
+        val isAdmin = userRepository.hasAdminPrivileges(userId)
+        require(isOwner || isAdmin) { "您没有权限修改" }
         return copilot.apply(edit).run(copilotRepository::save)
     }
 

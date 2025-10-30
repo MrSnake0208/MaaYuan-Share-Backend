@@ -25,6 +25,12 @@
 5. 首次运行建议修改配置文件中的 `maa-copilot.task-cron.ark-level` 配置，这样可以将明日方舟中的关卡数据同步到你本地的
    mongodb 中，为了防止反复调用造成调试的麻烦，建议首次运行同步成功后再将配置修改回去
 
+## 管理员账号配置
+
+- 系统根据 `maa_user.status` 字段判定管理员，`status >= 2` 的账号会自动获得与作业作者等同的管理权限。
+- 若需提升账号权限，可在 MongoDB 中执行更新：`db.maa_user.updateOne({userId: "<目标ID>"}, {$set: {status: 2}})`。
+- 修改后建议清理缓存或重启服务，确保最新权限即时生效。
+
 ## 项目结构
 
 - config # 存放 spring 配置
