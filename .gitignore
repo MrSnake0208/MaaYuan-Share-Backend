@@ -54,6 +54,9 @@ application-prod.yml
 # local artifacts
 ZootPlusBackend-*.jar
 
+# nix flake
+.direnv/
+data/*
 # Git worktrees (Crystal)
 /worktrees/
 /worktree-*/

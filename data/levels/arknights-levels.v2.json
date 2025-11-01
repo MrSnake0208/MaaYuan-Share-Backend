@@ -38,11 +38,11 @@
   {
     "game": "代号鸢",
     "catOne": "地宫",
-    "catTwo": "浮白与离光",
+    "catTwo": "极乐之宴",
     "catThree": "无",
-    "name": "浮白与离光",
-    "levelId": "dai_hao_yuan/di_gong/fu_bai_yu_li_guang",
-    "stageId": "fu_bai_yu_li_guang"
+    "name": "极乐之宴",
+    "levelId": "dai_hao_yuan/di_gong/ji_le_zhi_yan",
+    "stageId": "ji_le_zhi_yan"
   },
   {
     "game": "代号鸢",
@@ -128,11 +128,11 @@
   {
     "game": "代号鸢",
     "catOne": "地宫",
-    "catTwo": "师子狻猊",
+    "catTwo": "紫藤醉日",
     "catThree": "无",
-    "name": "师子狻猊",
-    "levelId": "dai_hao_yuan/di_gong/shi_zi_suan_ni",
-    "stageId": "shi_zi_suan_ni"
+    "name": "紫藤醉日",
+    "levelId": "dai_hao_yuan/di_gong/zi_teng_zui_ri",
+    "stageId": "zi_teng_zui_ri"
   },
   {
     "game": "代号鸢",
