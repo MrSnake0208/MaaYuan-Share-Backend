@@ -20,6 +20,8 @@ data class CopilotInfo(
     val catOne: String? = null,
     val catTwo: String? = null,
     val catThree: String? = null,
+    // 外挂标签（多选 AND），与三层分类并列
+    val tags: List<String>? = null,
     // 用于前端显示的格式化后的干员信息 [干员名]::[技能]
     val views: Long = 0,
     val hotScore: Double = 0.0,

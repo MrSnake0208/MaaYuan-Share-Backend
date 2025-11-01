@@ -27,4 +27,7 @@ data class CopilotMetadataRequest(
     val repostPlatform: String? = null,
     @JsonAlias("repostUrl")
     val repostUrl: String? = null,
+    // 外挂 tags（固定词表），上传/更新时可选
+    @JsonAlias("tags")
+    val tags: List<String>? = null,
 )

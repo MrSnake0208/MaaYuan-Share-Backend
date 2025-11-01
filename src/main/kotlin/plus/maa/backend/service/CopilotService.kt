@@ -149,6 +149,10 @@ class CopilotService(
             request.status,
         )
         copilot.metadata = request.metadata?.toEntityMetadata()
+        // 写入外挂 tags（固定词表）
+        request.metadata?.tags?.let { tags ->
+            copilot.tags = normalizeTags(tags)
+        }
         // 填充关卡冗余字段，避免前端反推
         fillLevelMeta(copilot)
         val copilotId = copilotRepository.insert(copilot).copilotId!!.also { id ->
@@ -588,6 +592,9 @@ class CopilotService(
             fillLevelMeta(this)
             request.metadata?.let {
                 metadata = it.toEntityMetadata()
+                it.tags?.let { nextTags ->
+                    tags = normalizeTags(nextTags)
+                }
             }
         }.apply {
             Cache.invalidateCopilotInfoByCid(copilotId)
@@ -664,6 +671,7 @@ class CopilotService(
         catOne = catOne,
         catTwo = catTwo,
         catThree = catThree,
+        tags = tags ?: emptyList(),
         views = views,
         hotScore = hotScore,
         available = true,
@@ -721,6 +729,14 @@ class CopilotService(
             "repost" -> "repost"
             else -> "original"
         }
+    }
+
+    private fun normalizeTags(raw: List<String>?): List<String> {
+        if (raw.isNullOrEmpty()) return emptyList()
+        val allowed = setOf("如鸢", "代号鸢")
+        return raw.mapNotNull { it?.trim() }
+            .filter { it.isNotEmpty() && it in allowed }
+            .distinct()
     }
 
     private fun sanitize(value: String?): String? {
