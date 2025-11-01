@@ -1,6 +1,7 @@
 package plus.maa.backend.controller.response.copilot
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import plus.maa.backend.service.model.CommentStatus
@@ -35,7 +36,10 @@ data class CopilotInfo(
     val dislike: Long = 0,
     val commentStatus: CommentStatus = CommentStatus.ENABLED,
     val status: CopilotSetStatus = CopilotSetStatus.PUBLIC,
-    val metadata: CopilotMetadataInfo = CopilotMetadataInfo(),
+    // 当后端无元数据时返回 null，且显式输出 null（不省略）
+    @field:JsonInclude(JsonInclude.Include.ALWAYS)
+    @get:JsonInclude(JsonInclude.Include.ALWAYS)
+    val metadata: CopilotMetadataInfo? = null,
 ) : Serializable
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)

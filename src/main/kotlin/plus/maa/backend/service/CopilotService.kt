@@ -666,6 +666,7 @@ class CopilotService(
         like = likeCount,
         dislike = dislikeCount,
         status = status,
+        // 当实体无元数据时返回 null，避免默认值造成歧义
         metadata = metadata.toResponseMetadata(),
     )
 
@@ -686,8 +687,8 @@ class CopilotService(
         return copilot.apply(edit).run(copilotRepository::save)
     }
 
-    private fun Copilot.Metadata?.toResponseMetadata(): CopilotMetadataInfo {
-        val entity = this ?: return CopilotMetadataInfo()
+    private fun Copilot.Metadata?.toResponseMetadata(): CopilotMetadataInfo? {
+        val entity = this ?: return null
         return CopilotMetadataInfo(
             sourceType = normalizeSourceType(entity.sourceType),
             repostAuthor = entity.repostAuthor,
