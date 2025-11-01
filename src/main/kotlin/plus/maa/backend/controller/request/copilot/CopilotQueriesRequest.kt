@@ -21,6 +21,8 @@ data class CopilotQueriesRequest(
     @BindParam("order_by") var orderBy: String? = null,
     val language: String? = null,
     @BindParam("copilot_ids") var copilotIds: List<Long>? = null,
+    // 新增：tags 多选 AND 过滤（固定词表）
+    var tags: List<String>? = null,
     val status: CopilotSetStatus? = null,
     val onlyFollowing: Boolean = false,
 )

@@ -310,6 +310,28 @@ class CopilotService(
             andQueries.add(c)
         }
 
+        // tags 多选 AND 过滤（固定词表；向后兼容基于 game 的“如鸢/代号鸢/通用”）
+        request.tags?.map { it.trim() }?.filter { it.isNotEmpty() }?.distinct()?.takeIf { it.isNotEmpty() }?.let { requiredTags ->
+            val orList = mutableListOf<Criteria>()
+            // 1) 原生 tags 字段包含全部 requiredTags
+            orList.add(Criteria.where("tags").all(requiredTags))
+            // 2) 兼容旧数据：用 game 字段回退匹配
+            val set = requiredTags.toSet()
+            if (set == setOf("如鸢")) {
+                orList.add(Criteria.where("game").`is`("如鸢"))
+            }
+            if (set == setOf("代号鸢")) {
+                orList.add(Criteria.where("game").`is`("代号鸢"))
+            }
+            if (set == setOf("如鸢", "代号鸢")) {
+                // “通用”视为同时适配两者
+                orList.add(Criteria.where("game").`is`("通用"))
+            }
+            if (orList.isNotEmpty()) {
+                andQueries.add(Criteria().orOperator(*orList.toTypedArray()))
+            }
+        }
+
         // 作业id列表
         request.copilotIds?.ifEmpty { null }?.let { ids ->
             andQueries.add(Criteria.where("copilotId").`in`(ids))

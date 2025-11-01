@@ -73,6 +73,8 @@ data class Copilot(
     var simingActions: Map<String, SimingAction>? = null,
     var doc: Doc? = null,
     var metadata: Metadata? = null,
+    // 新增：外挂 tags（多选）；用于列表筛选（AND）
+    var tags: List<String>? = null,
 ): Serializable {
     companion object {
         @JvmStatic
