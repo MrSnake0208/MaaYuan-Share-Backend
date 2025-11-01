@@ -69,7 +69,7 @@ class CopilotSetService(
      */
     fun addCopilotIds(req: CopilotSetModCopilotsReq, userId: String) {
         val copilotSet = repository.findById(req.id).orElseThrow { IllegalArgumentException("作业集不存在") }
-        Assert.state(copilotSet.creatorId == userId, "您不是该作业集的创建者，无权修改该作业集")
+        ensureCanManageSet(userId, copilotSet.creatorId, "您不是该作业集的创建者，无权修改该作业集")
         copilotSet.copilotIds.addAll(req.copilotIds)
         copilotSet.copilotIds = copilotSet.distinctIdsAndCheck()
         repository.save(copilotSet)
@@ -80,7 +80,7 @@ class CopilotSetService(
      */
     fun removeCopilotIds(req: CopilotSetModCopilotsReq, userId: String) {
         val copilotSet = repository.findById(req.id).orElseThrow { IllegalArgumentException("作业集不存在") }
-        Assert.state(copilotSet.creatorId == userId, "您不是该作业集的创建者，无权修改该作业集")
+        ensureCanManageSet(userId, copilotSet.creatorId, "您不是该作业集的创建者，无权修改该作业集")
         val removeIds: Set<Long> = HashSet(req.copilotIds)
         copilotSet.copilotIds.removeIf { o: Long -> removeIds.contains(o) }
         repository.save(copilotSet)
@@ -91,7 +91,7 @@ class CopilotSetService(
      */
     fun update(req: CopilotSetUpdateReq, userId: String) {
         val copilotSet = repository.findById(req.id).orElseThrow { IllegalArgumentException("作业集不存在") }
-        Assert.state(copilotSet.creatorId == userId, "您不是该作业集的创建者，无权修改该作业集")
+        ensureCanManageSet(userId, copilotSet.creatorId, "您不是该作业集的创建者，无权修改该作业集")
         if (!req.name.isNullOrBlank()) {
             copilotSet.name = req.name
         }
@@ -117,7 +117,7 @@ class CopilotSetService(
     fun delete(id: Long, userId: String) {
         log.info { "delete copilot set for id: $id, userId: $userId" }
         val copilotSet = repository.findById(id).orElseThrow { IllegalArgumentException("作业集不存在") }
-        Assert.state(copilotSet.creatorId == userId, "您不是该作业集的创建者，无权删除该作业集")
+        ensureCanManageSet(userId, copilotSet.creatorId, "您不是该作业集的创建者，无权删除该作业集")
         copilotSet.delete = true
         copilotSet.deleteTime = LocalDateTime.now()
         repository.save(copilotSet)
@@ -260,5 +260,11 @@ class CopilotSetService(
 
             return order + score / 1000.0 + base
         }
+    }
+
+    private fun ensureCanManageSet(userId: String, creatorId: String, message: String) {
+        val isOwner = creatorId == userId
+        val isAdmin = userService.hasAdminPrivileges(userId)
+        Assert.state(isOwner || isAdmin, message)
     }
 }
