@@ -6,7 +6,6 @@ import java.io.Serializable
  * v2 关卡信息，包含四层级（含 game）
  */
 data class ArkLevelInfoV2(
-    val game: String,
     val levelId: String,
     val stageId: String,
     val catOne: String,

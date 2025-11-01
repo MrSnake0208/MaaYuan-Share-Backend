@@ -14,8 +14,6 @@ import java.time.LocalDateTime
 data class ArkLevel(
     @Id
     val id: String? = null,
-    // 第一级：游戏分类，如 明日方舟/代号鸢
-    var game: String? = null,
     val levelId: String? = null,
     @Indexed
     val stageId: String? = null,

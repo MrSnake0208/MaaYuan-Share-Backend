@@ -15,7 +15,6 @@ data class CopilotInfo(
     val uploader: String,
     // 去反推化的关卡元信息（可选，旧数据可能为空）
     val stageId: String? = null,
-    val game: String? = null,
     val name: String? = null,
     val catOne: String? = null,
     val catTwo: String? = null,

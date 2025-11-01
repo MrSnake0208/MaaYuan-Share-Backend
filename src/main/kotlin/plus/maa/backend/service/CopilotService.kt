@@ -314,26 +314,9 @@ class CopilotService(
             andQueries.add(c)
         }
 
-        // tags 多选 AND 过滤（固定词表；向后兼容基于 game 的“如鸢/代号鸢/通用”）
+        // tags 多选 AND 过滤（固定词表）
         request.tags?.map { it.trim() }?.filter { it.isNotEmpty() }?.distinct()?.takeIf { it.isNotEmpty() }?.let { requiredTags ->
-            val orList = mutableListOf<Criteria>()
-            // 1) 原生 tags 字段包含全部 requiredTags
-            orList.add(Criteria.where("tags").all(requiredTags))
-            // 2) 兼容旧数据：用 game 字段回退匹配
-            val set = requiredTags.toSet()
-            if (set == setOf("如鸢")) {
-                orList.add(Criteria.where("game").`is`("如鸢"))
-            }
-            if (set == setOf("代号鸢")) {
-                orList.add(Criteria.where("game").`is`("代号鸢"))
-            }
-            if (set == setOf("如鸢", "代号鸢")) {
-                // “通用”视为同时适配两者
-                orList.add(Criteria.where("game").`is`("通用"))
-            }
-            if (orList.isNotEmpty()) {
-                andQueries.add(Criteria().orOperator(*orList.toTypedArray()))
-            }
+            andQueries.add(Criteria.where("tags").all(requiredTags))
         }
 
         // 作业id列表
@@ -529,7 +512,6 @@ class CopilotService(
                     meta.stageId?.let { if (!metaNode.hasNonNull("stage_id")) metaNode.put("stage_id", it) }
                     meta.levelId?.let { if (!metaNode.hasNonNull("level_id")) metaNode.put("level_id", it) }
                     meta.name?.let { if (!metaNode.hasNonNull("name")) metaNode.put("name", it) }
-                    meta.game?.let { if (!metaNode.hasNonNull("game")) metaNode.put("game", it) }
                     meta.catOne?.let { if (!metaNode.hasNonNull("cat_one")) metaNode.put("cat_one", it) }
                     meta.catTwo?.let { if (!metaNode.hasNonNull("cat_two")) metaNode.put("cat_two", it) }
                     meta.catThree?.let { if (!metaNode.hasNonNull("cat_three")) metaNode.put("cat_three", it) }
@@ -666,7 +648,6 @@ class CopilotService(
         uploaderId = uploaderId!!,
         uploader = userName,
         stageId = stageId ?: stageName,
-        game = game,
         name = name,
         catOne = catOne,
         catTwo = catTwo,
@@ -767,7 +748,6 @@ class CopilotService(
                         levelMeta.stageId?.let { put("stage_id", it) }
                         levelMeta.levelId?.let { put("level_id", it) }
                         levelMeta.name?.let { put("name", it) }
-                        levelMeta.game?.let { put("game", it) }
                         levelMeta.catOne?.let { put("cat_one", it) }
                         levelMeta.catTwo?.let { put("cat_two", it) }
                         levelMeta.catThree?.let { put("cat_three", it) }
@@ -796,7 +776,6 @@ class CopilotService(
                 stageId = info.stageId,
                 levelId = info.levelId,
                 name = info.name ?: explicitMeta?.name,
-                game = explicitMeta?.game ?: info.game,
                 catOne = explicitMeta?.catOne ?: info.catOne,
                 catTwo = explicitMeta?.catTwo ?: info.catTwo,
                 catThree = explicitMeta?.catThree ?: info.catThree,
@@ -805,7 +784,6 @@ class CopilotService(
             )
             copilot.stageId = info.stageId
             copilot.stageName = info.stageId // 维持旧字段含义
-            copilot.game = mergedMeta.game
             copilot.name = mergedMeta.name
             copilot.catOne = mergedMeta.catOne
             copilot.catTwo = mergedMeta.catTwo
@@ -819,7 +797,6 @@ class CopilotService(
             }
             if (explicitMeta != null) {
                 copilot.levelMeta = explicitMeta.copy(stageId = fallbackStage ?: explicitMeta.stageId)
-                copilot.game = explicitMeta.game
                 copilot.name = explicitMeta.name
                 copilot.catOne = explicitMeta.catOne
                 copilot.catTwo = explicitMeta.catTwo

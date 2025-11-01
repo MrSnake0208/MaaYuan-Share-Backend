@@ -56,7 +56,6 @@ class ArkLevelService(
 
         fun matchesAllTokensV2(info: ArkLevelInfoV2): Boolean {
             val fields = listOf(
-                info.game,
                 info.levelId,
                 info.stageId,
                 info.catOne,
@@ -132,23 +131,23 @@ class ArkLevelService(
             if (cacheFile.exists()) {
                 val json = cacheFile.readText()
                 val items: List<ArkLevel> = objectMapper.readValue(json)
-                items.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                items
             } else {
                 val resource = javaClass.classLoader.getResourceAsStream("levels/arknights-levels.v2.json")
                 if (resource != null) {
                     resource.use { input ->
                         val json = input.readBytes().toString(StandardCharsets.UTF_8)
                         val items: List<ArkLevel> = objectMapper.readValue(json)
-                        items.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                        items
                     }
                 } else {
                     log.warn { "levels/arknights-levels.v2.json not found in classpath, fallback to manualLevels" }
-                    manualLevels.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+                    manualLevels
                 }
             }
         } catch (e: Exception) {
             log.error(e) { "Failed to load levels from JSON, fallback to manualLevels" }
-            manualLevels.onEach { if (it.game.isNullOrBlank()) it.game = "明日方舟" }
+            manualLevels
         }
     }
 

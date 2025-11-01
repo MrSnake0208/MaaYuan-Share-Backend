@@ -77,7 +77,6 @@ interface CopilotConverter {
     @Mapping(target = "dislike", source = "copilot.dislikeCount")
     // 传递冗余的关卡元信息
     @Mapping(target = "stageId", source = "copilot.stageId")
-    @Mapping(target = "game", source = "copilot.game")
     @Mapping(target = "name", source = "copilot.name")
     @Mapping(target = "catOne", source = "copilot.catOne")
     @Mapping(target = "catTwo", source = "copilot.catTwo")

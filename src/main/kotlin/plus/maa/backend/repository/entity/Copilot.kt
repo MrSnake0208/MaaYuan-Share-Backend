@@ -30,7 +30,6 @@ data class Copilot(
     // 归一后的 stageId（与 stageName 等价，便于明确语义）
     var stageId: String? = null,
     // 去反推化的关卡元信息，冗余存储，便于前端直接展示
-    var game: String? = null,
     var name: String? = null,
     var catOne: String? = null,
     var catTwo: String? = null,
@@ -124,7 +123,6 @@ data class Copilot(
         var stageId: String? = null,
         var levelId: String? = null,
         var name: String? = null,
-        var game: String? = null,
         var catOne: String? = null,
         var catTwo: String? = null,
         var catThree: String? = null,
