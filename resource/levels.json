@@ -191,20 +191,20 @@
   {
     "game": "代号鸢",
     "catOne": "洞窟",
-    "catTwo": "2025年11月洞窟左",
-    "catThree": "左",
-    "name": "2025年11月洞窟左",
-    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku_02",
-    "stageId": "2_0_2_5_nian_1_1_dong_ku_02"
+    "catTwo": "2025年11月洞窟右",
+    "catThree": "右",
+    "name": "贝蒂小熊",
+    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku"
   },
   {
     "game": "代号鸢",
     "catOne": "洞窟",
-    "catTwo": "2025年11月洞窟右",
-    "catThree": "右",
-    "name": "2025年11月洞窟右",
-    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku_03",
-    "stageId": "2_0_2_5_nian_1_1_dong_ku_03"
+    "catTwo": "2025年11月洞窟左",
+    "catThree": "左",
+    "name": "蜈蚣针法传人",
+    "levelId": "dai_hao/dong_ku/2_0_2_5_nian_1_1_dong_ku_01",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_01"
   },
   {
     "game": "代号鸢",
@@ -214,6 +214,15 @@
     "name": "决战常山",
     "levelId": "dai_hao_yuan/huo_dong/jue_zhan_chang_shan",
     "stageId": "jue_zhan_chang_shan"
+  },
+  {
+    "game": "代号鸢",
+    "catOne": "家具",
+    "catTwo": "爱拼才会赢",
+    "catThree": "无",
+    "name": "爱拼才会赢",
+    "levelId": "dai_hao_yuan/jia_ju/ai_pin_cai_hui_ying",
+    "stageId": "ai_pin_cai_hui_ying"
   },
   {
     "game": "代号鸢",
@@ -470,29 +479,29 @@
   {
     "game": "如鸢",
     "catOne": "洞窟",
-    "catTwo": "2025年10月洞窟左",
+    "catTwo": "2025年10月洞窟右",
     "catThree": "右",
     "name": "窒息急救",
-    "levelId": "ru_yuan/dong_ku/2_0_2_5_nian_1_0_yue_dong_ku_zuo_02",
-    "stageId": "2_0_2_5_nian_1_0_yue_dong_ku_zuo_02"
+    "levelId": "ru/dong_ku/2_0_2_5_nian_1_0_dong_ku",
+    "stageId": "2_0_2_5_nian_1_0_dong_ku"
   },
   {
     "game": "如鸢",
     "catOne": "洞窟",
     "catTwo": "2025年11月洞窟左",
     "catThree": "左",
-    "name": "2025年11月洞窟左",
-    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku",
-    "stageId": "2_0_2_5_nian_1_1_dong_ku"
+    "name": "狐来的左手",
+    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku_02",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_02"
   },
   {
     "game": "如鸢",
     "catOne": "洞窟",
     "catTwo": "2025年11月洞窟右",
     "catThree": "右",
-    "name": "2025年11月洞窟右",
-    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku_01",
-    "stageId": "2_0_2_5_nian_1_1_dong_ku_01"
+    "name": "邈音梁子",
+    "levelId": "ru/dong_ku/2_0_2_5_nian_1_1_dong_ku_03",
+    "stageId": "2_0_2_5_nian_1_1_dong_ku_03"
   },
   {
     "game": "如鸢",
@@ -511,6 +520,15 @@
     "name": "三国志魂魂版",
     "levelId": "ru_yuan/huo_dong/san_guo_zhi_hun_hun_ban",
     "stageId": "san_guo_zhi_hun_hun_ban"
+  },
+  {
+    "game": "如鸢",
+    "catOne": "家具",
+    "catTwo": "爱拼才会赢",
+    "catThree": "无",
+    "name": "爱拼才会赢",
+    "levelId": "ru_yuan/jia_ju/ai_pin_cai_hui_ying_01",
+    "stageId": "ai_pin_cai_hui_ying_01"
   },
   {
     "game": "如鸢",
