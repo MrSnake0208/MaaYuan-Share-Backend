@@ -281,6 +281,14 @@
   },
   {
     "catOne": "洞窟",
+    "catTwo": "丕笑肉不笑",
+    "catThree": "左",
+    "name": "丕笑肉不笑",
+    "levelId": "dong_ku/pi_xiao_rou_bu_xiao",
+    "stageId": "pi_xiao_rou_bu_xiao"
+  },
+  {
+    "catOne": "洞窟",
     "catTwo": "人间繇物",
     "catThree": "右",
     "name": "人间繇物",
@@ -302,6 +310,14 @@
     "name": "燕人张飞",
     "levelId": "dong_ku/yan_ren_zhang_fei",
     "stageId": "yan_ren_zhang_fei"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "阳光开朗大男孩",
+    "catThree": "右",
+    "name": "阳光开朗大男孩",
+    "levelId": "dong_ku/yang_guang_kai_lang_da_nan_hai",
+    "stageId": "yang_guang_kai_lang_da_nan_hai"
   },
   {
     "catOne": "洞窟",
