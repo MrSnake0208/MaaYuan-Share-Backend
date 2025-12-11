@@ -184,6 +184,14 @@
     "stageId": "zi_teng_zui_ri"
   },
   {
+    "catOne": "地宫",
+    "catTwo": "梦中雪",
+    "catThree": "无",
+    "name": "梦中雪",
+    "levelId": "de_gong/meng_zhong_xue",
+    "stageId": "meng_zhong_xue"
+  },
+  {
     "catOne": "洞窟",
     "catTwo": "自作主璋",
     "catThree": "右",
