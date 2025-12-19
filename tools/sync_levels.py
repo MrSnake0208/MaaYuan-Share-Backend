@@ -113,7 +113,7 @@ def main():
     token = fc.get_tenant_token()
     records = fc.fetch_records(TABLE_KEY, token)
     levels_data = transform_levels(records)
-    fc.write_json_file(levels_data, "level.json")
+    fc.write_json_file(levels_data, "levels.json")
 
 
 if __name__ == "__main__":
