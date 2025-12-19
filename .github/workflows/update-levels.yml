@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests pypinyin
 
-      - name: Sync operators data
+      - name: Sync levels data
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -57,10 +57,10 @@ jobs:
           git config --local user.name "github-actions[bot]"
           
           # ✅ 修改点：使用脚本实际生成的准确路径
-          git add src/models/generated/operators.json || true
+          git add resource/levels.json || true
           
           # 提交变更
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update operators data [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update level data [skip ci]" && git push)
 
 #   deploy-to-nas:
 #     needs: sync-operators
