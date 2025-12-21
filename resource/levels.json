@@ -482,7 +482,7 @@
   {
     "catOne": "兰台",
     "catTwo": "二期",
-    "catThree": "戮魔阵",
+    "catThree": "右",
     "name": "戮魔阵",
     "levelId": "lan_tai/er_qi_01",
     "stageId": "er_qi_01"
@@ -490,7 +490,7 @@
   {
     "catOne": "兰台",
     "catTwo": "二期",
-    "catThree": "三才阵",
+    "catThree": "左",
     "name": "三才阵",
     "levelId": "lan_tai/er_qi_02",
     "stageId": "er_qi_02"
@@ -514,7 +514,7 @@
   {
     "catOne": "兰台",
     "catTwo": "一期",
-    "catThree": "诛仙阵",
+    "catThree": "右",
     "name": "诛仙阵",
     "levelId": "lan_tai/yi_qi_01",
     "stageId": "yi_qi_01"
@@ -522,7 +522,7 @@
   {
     "catOne": "兰台",
     "catTwo": "一期",
-    "catThree": "千军阵",
+    "catThree": "左",
     "name": "千军阵",
     "levelId": "lan_tai/yi_qi_02",
     "stageId": "yi_qi_02"
@@ -674,7 +674,7 @@
   {
     "catOne": "不知道啊",
     "catTwo": "我真的不知道",
-    "catThree": "我真的不知道",
+    "catThree": "无",
     "name": "我真的不知道",
     "levelId": "suibianxiexie",
     "stageId": "suibainxixexie"
