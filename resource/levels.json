@@ -678,5 +678,13 @@
     "name": "我真的不知道",
     "levelId": "suibianxiexie",
     "stageId": "suibainxixexie"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "寒夜厄境",
+    "catThree": "无",
+    "name": "寒夜厄境",
+    "levelId": "huo_dong/han_ye_e_jing",
+    "stageId": "han_ye_e_jing"
   }
 ]
