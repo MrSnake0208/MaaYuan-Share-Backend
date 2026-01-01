@@ -678,5 +678,21 @@
     "name": "寒夜厄境",
     "levelId": "huo_dong/han_ye_e_jing",
     "stageId": "han_ye_e_jing"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "江东第一门将",
+    "catThree": "左",
+    "name": "江东第一门将",
+    "levelId": "dong_ku/jiang_dong_di_yi_men_jiang",
+    "stageId": "jiang_dong_di_yi_men_jiang"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "置若罔闻虽可耻但有用",
+    "catThree": "右",
+    "name": "置若罔闻虽可耻但有用",
+    "levelId": "dong_ku/zhi_ruo_wang_wen_sui_ke_chi_dan_you_yong",
+    "stageId": "zhi_ruo_wang_wen_sui_ke_chi_dan_you_yong"
   }
 ]
