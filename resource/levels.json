@@ -694,5 +694,13 @@
     "name": "置若罔闻虽可耻但有用",
     "levelId": "dong_ku/zhi_ruo_wang_wen_sui_ke_chi_dan_you_yong",
     "stageId": "zhi_ruo_wang_wen_sui_ke_chi_dan_you_yong"
+  },
+  {
+    "catOne": "家具",
+    "catTwo": "回乡路",
+    "catThree": "无",
+    "name": "回乡路",
+    "levelId": "dai_hao_yuan/jia_ju/hui_xiang_lu",
+    "stageId": "hui_xiang_lu"
   }
 ]
