@@ -702,5 +702,13 @@
     "name": "回乡路",
     "levelId": "dai_hao_yuan/jia_ju/hui_xiang_lu",
     "stageId": "hui_xiang_lu"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年04月",
+    "catThree": "无",
+    "name": "2026年04月",
+    "levelId": "bai_gu/2_0_2_6_nian_0_4_yue",
+    "stageId": "2_0_2_6_nian_0_4_yue"
   }
 ]
