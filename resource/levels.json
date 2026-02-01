@@ -710,5 +710,21 @@
     "name": "2026年04月",
     "levelId": "bai_gu/2_0_2_6_nian_0_4_yue",
     "stageId": "2_0_2_6_nian_0_4_yue"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "旅游规划师",
+    "catThree": "左",
+    "name": "旅游规划师",
+    "levelId": "dong_ku/lv_you_gui_hua_shi",
+    "stageId": "lv_you_gui_hua_shi"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "有请话痨受害者",
+    "catThree": "右",
+    "name": "有请话痨受害者",
+    "levelId": "dong_ku/you_qing_hua_lao_shou_hai_zhe",
+    "stageId": "you_qing_hua_lao_shou_hai_zhe"
   }
 ]
