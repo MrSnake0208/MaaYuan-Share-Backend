@@ -726,5 +726,37 @@
     "name": "有请话痨受害者",
     "levelId": "dong_ku/you_qing_hua_lao_shou_hai_zhe",
     "stageId": "you_qing_hua_lao_shou_hai_zhe"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年05月",
+    "catThree": "无",
+    "name": "2026年05月",
+    "levelId": "bai_hu/2026_nian_05_yue",
+    "stageId": "2026_nian_05_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年06月",
+    "catThree": "无",
+    "name": "2026年06月",
+    "levelId": "bai_hu/2026_nian_06_yue",
+    "stageId": "2026_nian_06_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年08月",
+    "catThree": "无",
+    "name": "2026年08月",
+    "levelId": "bai_hu/2026_nian_08_yue",
+    "stageId": "2026_nian_08_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年07月",
+    "catThree": "无",
+    "name": "2026年07月",
+    "levelId": "bai_hu/2026_nian_07_yue",
+    "stageId": "2026_nian_07_yue"
   }
 ]
