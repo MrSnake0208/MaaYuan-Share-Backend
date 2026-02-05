@@ -52,7 +52,7 @@
     "catTwo": "欲追日影",
     "catThree": "无",
     "name": "欲追日影",
-    "levelId": "dai_hao_yuan/de_gong/yu_zhui_ri_ying",
+    "levelId": "dai_hao_yuan/di_gong/yu_zhui_ri_ying",
     "stageId": "yu_zhui_ri_ying"
   },
   {
@@ -188,7 +188,7 @@
     "catTwo": "梦中雪",
     "catThree": "无",
     "name": "梦中雪",
-    "levelId": "de_gong/meng_zhong_xue",
+    "levelId": "di_gong/meng_zhong_xue",
     "stageId": "meng_zhong_xue"
   },
   {
@@ -758,5 +758,13 @@
     "name": "2026年07月",
     "levelId": "bai_hu/2026_nian_07_yue",
     "stageId": "2026_nian_07_yue"
+  },
+  {
+    "catOne": "地宫",
+    "catTwo": "魇",
+    "catThree": "无",
+    "name": "魇",
+    "levelId": "dai_hao_yuan/di_gong/yan",
+    "stageId": "yan"
   }
 ]
