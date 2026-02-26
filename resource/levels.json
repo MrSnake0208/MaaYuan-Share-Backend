@@ -766,5 +766,13 @@
     "name": "魇",
     "levelId": "dai_hao_yuan/di_gong/yan_",
     "stageId": "yan_"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "咪教模拟器",
+    "catThree": "无",
+    "name": "咪教模拟器",
+    "levelId": "huo_dong/mi_jiao_mo_ni_qi",
+    "stageId": "mi_jiao_mo_ni_qi"
   }
 ]
