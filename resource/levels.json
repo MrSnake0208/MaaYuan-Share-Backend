@@ -774,5 +774,21 @@
     "name": "咪教模拟器",
     "levelId": "huo_dong/mi_jiao_mo_ni_qi",
     "stageId": "mi_jiao_mo_ni_qi"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "边防律师",
+    "catThree": "左",
+    "name": "边防律师",
+    "levelId": "dong_ku/bian_fang_lv_shi",
+    "stageId": "bian_fang_lv_shi"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "邪恶二刺螈",
+    "catThree": "右",
+    "name": "邪恶二刺螈",
+    "levelId": "dong_ku/xie_e_er_ci_yuan",
+    "stageId": "xie_e_er_ci_yuan"
   }
 ]
