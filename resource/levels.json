@@ -790,5 +790,13 @@
     "name": "邪恶二刺螈",
     "levelId": "dong_ku/xie_e_er_ci_yuan",
     "stageId": "xie_e_er_ci_yuan"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "七载相逢之秋",
+    "catThree": "无",
+    "name": "七载相逢之秋",
+    "levelId": "huo_dong/qi_zai_xiang_feng_zhi_qiu",
+    "stageId": "qi_zai_xiang_feng_zhi_qiu"
   }
 ]
