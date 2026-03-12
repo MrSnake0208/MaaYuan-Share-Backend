@@ -793,10 +793,10 @@
   },
   {
     "catOne": "活动",
-    "catTwo": "七载重逢之秋",
+    "catTwo": "七载相逢之秋",
     "catThree": "无",
-    "name": "七载重逢之秋",
-    "levelId": "huo_dong/qi_zai_chong_feng_zhi_qiu",
-    "stageId": "qi_zai_chong_feng_zhi_qiu"
+    "name": "七载相逢之秋",
+    "levelId": "huo_dong/qi_zai_xiang_feng_zhi_qiu",
+    "stageId": "qi_zai_xiang_feng_zhi_qiu"
   }
 ]
