@@ -798,5 +798,13 @@
     "name": "七载相逢之秋",
     "levelId": "huo_dong/qi_zai_xiang_feng_zhi_qiu",
     "stageId": "qi_zai_xiang_feng_zhi_qiu"
+  },
+  {
+    "catOne": "地宫",
+    "catTwo": "欲影",
+    "catThree": "无",
+    "name": "欲影",
+    "levelId": "di_gong/yu_ying",
+    "stageId": "yu_ying"
   }
 ]
