@@ -801,10 +801,18 @@
   },
   {
     "catOne": "地宫",
-    "catTwo": "欲影谍影",
+    "catTwo": "欲影·谍影",
     "catThree": "无",
-    "name": "欲影谍影",
+    "name": "欲影·谍影",
     "levelId": "di_gong/yu_ying_die_ying",
     "stageId": "yu_ying_die_ying"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "危急存亡之秋",
+    "catThree": "无",
+    "name": "危急存亡之秋",
+    "levelId": "huo_dong/wei_ji_cun_wang_zhi_qiu",
+    "stageId": "wei_ji_cun_wang_zhi_qiu"
   }
 ]
