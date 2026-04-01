@@ -910,5 +910,21 @@
     "name": "蛾部管培生",
     "levelId": "dong_ku/e_bu_guan_pei_sheng",
     "stageId": "e_bu_guan_pei_sheng"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "燕歌行",
+    "catThree": "无",
+    "name": "燕歌行",
+    "levelId": "huo_dong/yan_ge_xing",
+    "stageId": "yan_ge_xing"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "",
+    "catThree": "无",
+    "name": "",
+    "levelId": "",
+    "stageId": ""
   }
 ]
