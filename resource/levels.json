@@ -902,5 +902,13 @@
     "name": "出一捆四",
     "levelId": "dong_ku/chu_yi_kun_si",
     "stageId": "chu_yi_kun_si"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "蛾部管培生",
+    "catThree": "左",
+    "name": "蛾部管培生",
+    "levelId": "dong_ku/e_bu_guan_pei_sheng",
+    "stageId": "e_bu_guan_pei_sheng"
   }
 ]
