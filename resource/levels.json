@@ -886,5 +886,21 @@
     "name": "弓瑾爆诞",
     "levelId": "dong_ku/gong_jin_bao_dan",
     "stageId": "gong_jin_bao_dan"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "颈上添花",
+    "catThree": "左",
+    "name": "颈上添花",
+    "levelId": "dong_ku/jing_shang_tian_hua",
+    "stageId": "jing_shang_tian_hua"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "出一捆四",
+    "catThree": "右",
+    "name": "出一捆四",
+    "levelId": "dong_ku/chu_yi_kun_si",
+    "stageId": "chu_yi_kun_si"
   }
 ]
