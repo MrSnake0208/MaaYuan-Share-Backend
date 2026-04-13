@@ -921,10 +921,10 @@
   },
   {
     "catOne": "活动",
-    "catTwo": "",
+    "catTwo": "影战",
     "catThree": "无",
-    "name": "",
-    "levelId": "",
-    "stageId": ""
+    "name": "影战",
+    "levelId": "huo_dong/ying_zhan",
+    "stageId": "ying_zhan"
   }
 ]
