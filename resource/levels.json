@@ -926,5 +926,37 @@
     "name": "影战",
     "levelId": "huo_dong/ying_zhan",
     "stageId": "ying_zhan"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "家中顶梁柱",
+    "catThree": "右",
+    "name": "家中顶梁柱",
+    "levelId": "dong_ku/jia_zhong_ding_liang_zhu",
+    "stageId": "jia_zhong_ding_liang_zhu"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "何时逃离原生家庭",
+    "catThree": "左",
+    "name": "何时逃离原生家庭",
+    "levelId": "dong_ku/he_shi_tao_li_yuan_sheng_jia_ting",
+    "stageId": "he_shi_tao_li_yuan_sheng_jia_ting"
+  },
+  {
+    "catOne": "家具",
+    "catTwo": "美食一条街",
+    "catThree": "无",
+    "name": "美食一条街",
+    "levelId": "jia_ju/mei_shi_yi_tiao_jie",
+    "stageId": "mei_shi_yi_tiao_jie"
+  },
+  {
+    "catOne": "家具",
+    "catTwo": "游春集2",
+    "catThree": "无",
+    "name": "游春集2",
+    "levelId": "dai_hao_yuan/jia_ju/you_chun_ji2",
+    "stageId": "you_chun_ji2"
   }
 ]
