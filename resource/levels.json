@@ -950,13 +950,5 @@
     "name": "美食一条街",
     "levelId": "jia_ju/mei_shi_yi_tiao_jie",
     "stageId": "mei_shi_yi_tiao_jie"
-  },
-  {
-    "catOne": "家具",
-    "catTwo": "游春集2",
-    "catThree": "无",
-    "name": "游春集2",
-    "levelId": "dai_hao_yuan/jia_ju/you_chun_ji2",
-    "stageId": "you_chun_ji2"
   }
 ]
