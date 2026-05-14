@@ -950,5 +950,13 @@
     "name": "美食一条街",
     "levelId": "jia_ju/mei_shi_yi_tiao_jie",
     "stageId": "mei_shi_yi_tiao_jie"
+  },
+  {
+    "catOne": "地宫",
+    "catTwo": "千觞红",
+    "catThree": "无",
+    "name": "千觞红",
+    "levelId": "di_gong/qian_shang_hong",
+    "stageId": "qian_shang_hong"
   }
 ]
