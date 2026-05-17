@@ -958,5 +958,21 @@
     "name": "千觞红",
     "levelId": "di_gong/qian_shang_hong",
     "stageId": "qian_shang_hong"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "夜以继日的绩效评估",
+    "catThree": "无",
+    "name": "夜以继日的绩效评估",
+    "levelId": "huo_dong/ye_yi_ji_ri_de_ji_xiao_ping_gu",
+    "stageId": "ye_yi_ji_ri_de_ji_xiao_ping_gu"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "披荆斩棘的实习考核",
+    "catThree": "无",
+    "name": "披荆斩棘的实习考核",
+    "levelId": "huo_dong/pi_jing_zhan_ji_de_shi_xi_kao_he",
+    "stageId": "pi_jing_zhan_ji_de_shi_xi_kao_he"
   }
 ]
