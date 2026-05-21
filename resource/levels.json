@@ -974,5 +974,13 @@
     "name": "披荆斩棘的实习考核",
     "levelId": "huo_dong/pi_jing_zhan_ji_de_shi_xi_kao_he",
     "stageId": "pi_jing_zhan_ji_de_shi_xi_kao_he"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "去去指哀牢",
+    "catThree": "无",
+    "name": "去去指哀牢",
+    "levelId": "huo_dong/qu_qu_zhi_ai_lao",
+    "stageId": "qu_qu_zhi_ai_lao"
   }
 ]
