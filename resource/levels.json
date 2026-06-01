@@ -982,5 +982,21 @@
     "name": "去去指哀牢",
     "levelId": "huo_dong/qu_qu_zhi_ai_lao",
     "stageId": "qu_qu_zhi_ai_lao"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "知名美学家",
+    "catThree": "左",
+    "name": "知名美学家",
+    "levelId": "dong_ku/zhi_ming_mei_xue_jia",
+    "stageId": "zhi_ming_mei_xue_jia"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "天人感应之极限",
+    "catThree": "右",
+    "name": "天人感应之极限",
+    "levelId": "dong_ku/tian_ren_gan_ying_zhi_ji_xian",
+    "stageId": "tian_ren_gan_ying_zhi_ji_xian"
   }
 ]
