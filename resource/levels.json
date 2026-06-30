@@ -998,5 +998,21 @@
     "name": "天人感应之极限",
     "levelId": "dong_ku/tian_ren_gan_ying_zhi_ji_xian",
     "stageId": "tian_ren_gan_ying_zhi_ji_xian"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "七擒七纵",
+    "catThree": "左",
+    "name": "七擒七纵",
+    "levelId": "dong_ku/qi_qin_qi_zong",
+    "stageId": "qi_qin_qi_zong"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "力筝上游",
+    "catThree": "右",
+    "name": "力筝上游",
+    "levelId": "dong_ku/li_zheng_shang_you",
+    "stageId": "li_zheng_shang_you"
   }
 ]
