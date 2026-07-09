@@ -1014,5 +1014,29 @@
     "name": "力筝上游",
     "levelId": "dong_ku/li_zheng_shang_you",
     "stageId": "li_zheng_shang_you"
+  },
+  {
+    "catOne": "地宫",
+    "catTwo": "恼春絮",
+    "catThree": "无",
+    "name": "恼春絮",
+    "levelId": "di_gong/nao_chun_xu",
+    "stageId": "nao_chun_xu"
+  },
+  {
+    "catOne": "历练",
+    "catTwo": "阵容搭配演练",
+    "catThree": "无",
+    "name": "阵容搭配演练",
+    "levelId": "li_lian/zhen_rong_da_pei_yan_lian",
+    "stageId": "zhen_rong_da_pei_yan_lian"
+  },
+  {
+    "catOne": "历练",
+    "catTwo": "战斗机制演练",
+    "catThree": "无",
+    "name": "战斗机制演练",
+    "levelId": "li_lian/zhan_dou_ji_zhi_yan_lian",
+    "stageId": "zhan_dou_ji_zhi_yan_lian"
   }
 ]
