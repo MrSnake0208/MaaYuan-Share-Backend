@@ -1038,5 +1038,53 @@
     "name": "战斗机制演练",
     "levelId": "li_lian/zhan_dou_ji_zhi_yan_lian",
     "stageId": "zhan_dou_ji_zhi_yan_lian"
+  },
+  {
+    "catOne": "家具",
+    "catTwo": "全体运动会",
+    "catThree": "无",
+    "name": "全体运动会",
+    "levelId": "jia_ju/quan_ti_yun_dong_hui",
+    "stageId": "quan_ti_yun_dong_hui"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年09月",
+    "catThree": "无",
+    "name": "2026年09月",
+    "levelId": "bai_hu/2026_nian_09_yue",
+    "stageId": "2026_nian_09_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年10月",
+    "catThree": "无",
+    "name": "2026年10月",
+    "levelId": "bai_hu/2026_nian_10_yue",
+    "stageId": "2026_nian_10_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年11月",
+    "catThree": "无",
+    "name": "2026年11月",
+    "levelId": "bai_hu/2026_nian_11_yue",
+    "stageId": "2026_nian_11_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2026年12月",
+    "catThree": "无",
+    "name": "2026年12月",
+    "levelId": "bai_hu/2026_nian_12_yue",
+    "stageId": "2026_nian_12_yue"
+  },
+  {
+    "catOne": "白鹄",
+    "catTwo": "2027年01月",
+    "catThree": "无",
+    "name": "2027年01月",
+    "levelId": "bai_hu/2027_nian_01_yue",
+    "stageId": "2027_nian_01_yue"
   }
 ]
