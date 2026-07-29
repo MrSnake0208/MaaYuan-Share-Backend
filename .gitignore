@@ -60,3 +60,5 @@ data/*
 # Git worktrees (Crystal)
 /worktrees/
 /worktree-*/
+
+application-template.yml
