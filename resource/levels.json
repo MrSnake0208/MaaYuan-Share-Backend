@@ -1086,5 +1086,21 @@
     "name": "2027年01月",
     "levelId": "bai_hu/2027_nian_01_yue",
     "stageId": "2027_nian_01_yue"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "遗复子",
+    "catThree": "左",
+    "name": "遗复子",
+    "levelId": "dong_ku/yi_fu_zi",
+    "stageId": "yi_fu_zi"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "女同事",
+    "catThree": "右",
+    "name": "女同事",
+    "levelId": "dong_ku/nv_tong_shi",
+    "stageId": "nv_tong_shi"
   }
 ]
