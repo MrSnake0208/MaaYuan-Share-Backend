@@ -9,6 +9,7 @@ import plus.maa.backend.controller.request.box.OperatorBoxPresetCreateReq
 import plus.maa.backend.controller.request.box.OperatorBoxPresetUpdateReq
 import plus.maa.backend.controller.response.box.OperatorBoxPresetRes
 import plus.maa.backend.repository.OperatorBoxPresetRepository
+import plus.maa.backend.repository.OperatorBoxTrainingConfigRepository
 import plus.maa.backend.repository.entity.OperatorBoxPreset
 import plus.maa.backend.service.model.OperatorBoxMember
 import java.time.LocalDateTime
@@ -16,6 +17,7 @@ import java.time.LocalDateTime
 @Service
 class OperatorBoxPresetService(
     private val repository: OperatorBoxPresetRepository,
+    private val trainingConfigRepository: OperatorBoxTrainingConfigRepository,
 ) {
     fun list(userId: String): List<OperatorBoxPresetRes> =
         repository.findAllByUserIdOrderByUpdateTimeDesc(userId).map(OperatorBoxPresetRes::from)
@@ -70,6 +72,7 @@ class OperatorBoxPresetService(
         requireCurrentRevision(entity, expectedRevision)
         try {
             repository.delete(entity)
+            trainingConfigRepository.deleteAllByUserIdAndBoxId(userId, id)
         } catch (_: OptimisticLockingFailureException) {
             throw conflict("阵容预设已被更新，请刷新后重试")
         }

@@ -12,13 +12,15 @@ import org.springframework.web.server.ResponseStatusException
 import plus.maa.backend.controller.request.box.OperatorBoxPresetCreateReq
 import plus.maa.backend.controller.request.box.OperatorBoxPresetUpdateReq
 import plus.maa.backend.repository.OperatorBoxPresetRepository
+import plus.maa.backend.repository.OperatorBoxTrainingConfigRepository
 import plus.maa.backend.repository.entity.OperatorBoxPreset
 import plus.maa.backend.service.model.OperatorBoxMember
 import java.time.LocalDateTime
 
 class OperatorBoxPresetServiceTest {
     private val repository = mockk<OperatorBoxPresetRepository>()
-    private val service = OperatorBoxPresetService(repository)
+    private val trainingConfigRepository = mockk<OperatorBoxTrainingConfigRepository>()
+    private val service = OperatorBoxPresetService(repository, trainingConfigRepository)
 
     @Test
     fun `creates a normalized versioned box for the authenticated user`() {
@@ -123,10 +125,12 @@ class OperatorBoxPresetServiceTest {
         val existing = box()
         every { repository.findByIdAndUserId("box-1", "user-1") } returns existing
         every { repository.delete(existing) } just runs
+        every { trainingConfigRepository.deleteAllByUserIdAndBoxId("user-1", "box-1") } returns 1
 
         service.delete("box-1", 2, "user-1")
 
         verify(exactly = 1) { repository.delete(existing) }
+        verify(exactly = 1) { trainingConfigRepository.deleteAllByUserIdAndBoxId("user-1", "box-1") }
     }
 
     private fun box(
