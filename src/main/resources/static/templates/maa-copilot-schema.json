@@ -320,10 +320,28 @@
           "$ref": "#/definitions/int_tuple"
         },
         "recognition": {
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/pipeline_recognition"
+            }
+          ]
         },
         "expected": {
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ]
         },
         "roi": {
           "$ref": "#/definitions/int_tuple"
@@ -378,6 +396,21 @@
       "items": {
         "type": "integer"
       }
+    },
+    "pipeline_recognition": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "param": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
     }
   }
 }
