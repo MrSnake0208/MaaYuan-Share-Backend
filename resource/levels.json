@@ -1113,10 +1113,10 @@
   },
   {
     "catOne": "活动",
-    "catTwo": "",
+    "catTwo": "独夜灯影",
     "catThree": "无",
-    "name": "",
-    "levelId": "",
-    "stageId": ""
+    "name": "独夜灯影",
+    "levelId": "huo_dong/du_ye_deng_ying",
+    "stageId": "du_ye_deng_ying"
   }
 ]
