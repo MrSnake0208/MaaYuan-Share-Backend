@@ -1118,5 +1118,21 @@
     "name": "独夜灯影",
     "levelId": "huo_dong/du_ye_deng_ying",
     "stageId": "du_ye_deng_ying"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "铁尺铜牙",
+    "catThree": "左",
+    "name": "铁尺铜牙",
+    "levelId": "dong_ku/tie_chi_tong_ya",
+    "stageId": "tie_chi_tong_ya"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "辟雍三贤之二",
+    "catThree": "右",
+    "name": "辟雍三贤之二",
+    "levelId": "dong_ku/pi_yong_san_xian_zhi_er",
+    "stageId": "pi_yong_san_xian_zhi_er"
   }
 ]
