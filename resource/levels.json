@@ -1134,5 +1134,13 @@
     "name": "辟雍三贤之二",
     "levelId": "dong_ku/pi_yong_san_xian_zhi_er",
     "stageId": "pi_yong_san_xian_zhi_er"
+  },
+  {
+    "catOne": "地宫",
+    "catTwo": "如镜中观",
+    "catThree": "无",
+    "name": "如镜中观",
+    "levelId": "di_gong/ru_jing_zhong_guan",
+    "stageId": "ru_jing_zhong_guan"
   }
 ]
