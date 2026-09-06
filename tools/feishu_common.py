@@ -3,66 +3,154 @@
 包含所有通用的、可复用的代码，如 API 配置、token 管理、文件下载、JSON 写入等函数。
 """
 
-import os, json, pathlib, requests, time, re
+import json
+import os
+import pathlib
+import re
+import tempfile
+import time
+from typing import Any
 from urllib.parse import urlparse
 
+import requests
+
 # === 0. 基础配置（强烈建议用环境变量读取） ===
-APP_ID     = os.getenv("FEISHU_APP_ID",     "")
+APP_ID = os.getenv("FEISHU_APP_ID", "")
 APP_SECRET = os.getenv("FEISHU_APP_SECRET", "")
-BASE_URL   = "https://open.feishu.cn"
+BASE_URL = os.getenv("FEISHU_BASE_URL", "https://open.feishu.cn")
 SITE_DATA_DIR = pathlib.Path(__file__).parent.parent / "resource"
 FEISHU_IMAGE_DIR = pathlib.Path(__file__).parent.parent / "public" / "images" / "feishu"
+RETRY_COUNT = 3
+RETRY_BACKOFF_SECONDS = 1
 
 TABLES = {
-    "levels":       dict(cn_name="关卡数据",   app="IquLbb1sVaV3ljsPhaPcxbmVnbb", tbl="tblywzqIAWTwZstE"),
-    "operators":       dict(cn_name="密探数据",   app="IquLbb1sVaV3ljsPhaPcxbmVnbb", tbl="tblqJZBK1eaz7idg"),
+    "levels": dict(
+        cn_name="关卡数据",
+        app=os.getenv("FEISHU_LEVELS_APP_TOKEN", os.getenv("FEISHU_BITABLE_ID", "IquLbb1sVaV3ljsPhaPcxbmVnbb")),
+        tbl=os.getenv("FEISHU_LEVELS_TABLE_ID", os.getenv("FEISHU_TABLE_ID", "tblywzqIAWTwZstE")),
+    ),
+    "operators": dict(
+        cn_name="密探数据",
+        app=os.getenv("FEISHU_OPERATORS_APP_TOKEN", os.getenv("FEISHU_BITABLE_ID", "IquLbb1sVaV3ljsPhaPcxbmVnbb")),
+        tbl=os.getenv("FEISHU_OPERATORS_TABLE_ID", os.getenv("FEISHU_TABLE_ID", "tblqJZBK1eaz7idg")),
+    ),
 }
 
 # === 1. 飞书 API 封装 ===
 
+
+class FeishuApiError(RuntimeError):
+    """飞书接口返回错误，调用方不得使用不完整的数据继续写文件。"""
+
+
+def _request_json(method: str, url: str, **kwargs) -> dict:
+    for attempt in range(RETRY_COUNT + 1):
+        try:
+            response = requests.request(method, url, **kwargs)
+            status = response.status_code
+            if (status == 429 or status >= 500) and attempt < RETRY_COUNT:
+                time.sleep(RETRY_BACKOFF_SECONDS * (attempt + 1))
+                continue
+
+            response.raise_for_status()
+            try:
+                payload = response.json()
+            except ValueError as exc:
+                raise FeishuApiError(f"Feishu returned invalid JSON: {url}") from exc
+            if not isinstance(payload, dict):
+                raise FeishuApiError(f"Feishu returned an invalid payload: {url}")
+            if payload.get("code", 0) not in (0, "0"):
+                raise FeishuApiError(
+                    f"Feishu API error {payload.get('code')}: {payload.get('msg', 'unknown error')}"
+                )
+            return payload
+        except requests.RequestException as exc:
+            status = getattr(exc.response, "status_code", None)
+            if attempt < RETRY_COUNT and (status is None or status == 429 or status >= 500):
+                time.sleep(RETRY_BACKOFF_SECONDS * (attempt + 1))
+                continue
+            raise
+
+    raise FeishuApiError(f"Feishu request failed after retries: {url}")
+
 def get_tenant_token() -> str:
     """获取 tenant_access_token"""
-    url  = f"{BASE_URL}/open-apis/auth/v3/tenant_access_token/internal"
+    url = f"{BASE_URL}/open-apis/auth/v3/tenant_access_token/internal"
     body = {"app_id": APP_ID, "app_secret": APP_SECRET}
-    r = requests.post(url, json=body, timeout=10)
-    r.raise_for_status()
-    return r.json()["tenant_access_token"]
+    payload = _request_json("POST", url, json=body, timeout=10)
+    tenant_token = payload.get("tenant_access_token")
+    if not isinstance(tenant_token, str) or not tenant_token.strip():
+        raise FeishuApiError("Feishu token response did not contain tenant_access_token")
+    return tenant_token
 
-def list_records(app_token: str, table_id: str, token: str, sort_field: str = None):
-    """获取一个表的所有记录（会自动处理分页）"""
-    all_records = []
+def list_table_fields(app_token: str, table_id: str, token: str) -> set[str]:
+    """读取字段 schema，避免字段变更后生成不完整数据。"""
+    field_names: set[str] = set()
     page_token = ""
     while True:
-        params = {"page_size": 500}
+        params = {"page_size": 100}
         if page_token:
             params["page_token"] = page_token
 
-        # 添加排序参数，按照记录创建时间或指定字段排序
+        url = f"{BASE_URL}/open-apis/bitable/v1/apps/{app_token}/tables/{table_id}/fields"
+        payload = _request_json(
+            "GET",
+            url,
+            headers={"Authorization": f"Bearer {token}"},
+            params=params,
+            timeout=30,
+        )
+        data = payload.get("data")
+        if not isinstance(data, dict) or not isinstance(data.get("items"), list):
+            raise FeishuApiError("Feishu fields response is missing data.items")
+        for item in data["items"]:
+            if isinstance(item, dict) and isinstance(item.get("field_name"), str):
+                field_names.add(item["field_name"])
+
+        if not data.get("has_more"):
+            return field_names
+        page_token = data.get("page_token") or ""
+        if not page_token:
+            raise FeishuApiError("Feishu fields response requested another page without page_token")
+
+
+def list_records(
+    app_token: str,
+    table_id: str,
+    token: str,
+    sort_field: str = None,
+    field_names: list[str] | None = None,
+):
+    """通过 records/search 获取一个表的所有记录（自动处理分页）。"""
+    all_records: list[dict[str, Any]] = []
+    page_token = ""
+    while True:
+        body = {"page_size": 500}
+        if page_token:
+            body["page_token"] = page_token
+
+        if field_names:
+            body["field_names"] = field_names
         if sort_field:
-            params["sort"] = f'[{{"field_name":"{sort_field}","desc":false}}]'
+            body["sort"] = [{"field_name": sort_field, "desc": False}]
 
-        url = f"{BASE_URL}/open-apis/bitable/v1/apps/{app_token}/tables/{table_id}/records"
-        headers = {"Authorization": f"Bearer {token}"}
-        r = requests.get(url, headers=headers, params=params, timeout=30)
-        print(r.json())
-        r.raise_for_status()
-        resp_data = r.json()
-
-        if resp_data.get("code", 0) != 0:
-            print(f"Error from Feishu API: {resp_data.get('msg')} (code: {resp_data.get('code')})")
-            # 打印一些上下文帮助调试
-            print(f"  → Request URL: {r.request.url}")
-            print(f"  → App Token used: {app_token}")
-            print(f"  → Table ID used: {table_id}")
-            break
-
-        data = resp_data.get("data", {})
-        items = data.get("items", [])
-        if items:
-            all_records.extend(items)
+        url = f"{BASE_URL}/open-apis/bitable/v1/apps/{app_token}/tables/{table_id}/records/search"
+        payload = _request_json(
+            "POST",
+            url,
+            headers={"Authorization": f"Bearer {token}"},
+            json=body,
+            timeout=30,
+        )
+        data = payload.get("data")
+        if not isinstance(data, dict) or not isinstance(data.get("items"), list):
+            raise FeishuApiError("Feishu records response is missing data.items")
+        all_records.extend(data["items"])
 
         if data.get("has_more"):
-            page_token = data.get("page_token")
+            page_token = data.get("page_token") or ""
+            if not page_token:
+                raise FeishuApiError("Feishu records response requested another page without page_token")
         else:
             break
         time.sleep(0.2) # 避免频率超限
@@ -126,21 +214,57 @@ def download_feishu_file(url: str, token: str, table_name: str) -> str | None:
 
 # === 2. 辅助函数 ===
 
-def write_json_file(data: any, filename: str):
-    """将数据写入指定的 JSON 文件"""
-    outfile = SITE_DATA_DIR / filename
+def write_json_file(data: Any, filename: str):
+    """将数据原子写入指定的 JSON 文件。"""
+    outfile = pathlib.Path(filename)
+    if not outfile.is_absolute():
+        outfile = SITE_DATA_DIR / outfile
     outfile.parent.mkdir(parents=True, exist_ok=True)
-    outfile.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    serialized = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=outfile.parent,
+            prefix=f".{outfile.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temp_file:
+            temp_file.write(serialized)
+            temp_file.flush()
+            os.fsync(temp_file.fileno())
+            temp_path = pathlib.Path(temp_file.name)
+        os.replace(temp_path, outfile)
+    finally:
+        if temp_path and temp_path.exists():
+            temp_path.unlink()
 
     count_info = ""
     if isinstance(data, list):
         count_info = f" ({len(data)} items)"
     print(f"✔ Generated {outfile}{count_info}")
 
-def fetch_records(table_key: str, token: str, sort_field: str = None) -> list:
+def fetch_records(
+    table_key: str,
+    token: str,
+    sort_field: str = None,
+    field_names: list[str] | None = None,
+) -> list:
     """根据 table key 获取一个表的所有记录"""
-    table_info = TABLES[table_key]
+    try:
+        table_info = TABLES[table_key]
+    except KeyError as exc:
+        raise FeishuApiError(f"Unknown Feishu table key: {table_key}") from exc
     print(f"Fetching {table_info['cn_name']}...")
-    records = list_records(table_info["app"], table_info["tbl"], token, sort_field)
+    records = list_records(
+        table_info["app"],
+        table_info["tbl"],
+        token,
+        sort_field,
+        field_names,
+    )
+    if not records:
+        raise FeishuApiError(f"Feishu table {table_info['cn_name']} returned no records")
     print(f"  → Fetched {len(records)} records.")
     return records

@@ -12,4 +12,5 @@ data class ArkLevelInfoV2(
     val catTwo: String,
     val catThree: String,
     val name: String,
+    val endTime: String? = null,
 ) : Serializable

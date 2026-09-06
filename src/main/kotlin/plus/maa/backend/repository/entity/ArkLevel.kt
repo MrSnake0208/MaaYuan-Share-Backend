@@ -27,6 +27,8 @@ data class ArkLevel(
     var catThree: String? = null,
     // 地图名, 例: 冬逝、爱国者之死
     val name: String? = null,
+    // 飞书同步的结束时间，带时区的 ISO 8601 字符串
+    val endTime: String? = null,
     // 只是服务器认为的当前版本地图是否开放
     var isOpen: Boolean? = null,
     // 非实际意义上的活动地图关闭时间，只是服务器认为的关闭时间

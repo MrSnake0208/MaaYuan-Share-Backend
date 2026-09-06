@@ -1,5 +1,7 @@
 package plus.maa.backend.service.level
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -8,8 +10,6 @@ import plus.maa.backend.common.utils.converter.ArkLevelConverterV2
 import plus.maa.backend.controller.response.copilot.ArkLevelInfo
 import plus.maa.backend.controller.response.copilot.ArkLevelInfoV2
 import plus.maa.backend.repository.entity.ArkLevel
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import java.nio.charset.StandardCharsets
 
 /**
@@ -125,10 +125,10 @@ class ArkLevelService(
 
     private fun loadLevelsFromJson(): List<ArkLevel> {
         return try {
-            // 优先读取本地缓存文件
+            // 运行时 GitHub 同步关闭时，必须使用构建进 classpath 的版本。
             val cfg = properties.levels
             val cacheFile = java.io.File(cfg.localCache)
-            if (cacheFile.exists()) {
+            if (cfg.enableGithub && cacheFile.exists()) {
                 val json = cacheFile.readText()
                 val items: List<ArkLevel> = objectMapper.readValue(json)
                 items

@@ -1,6 +1,12 @@
 name: Release jar and Docker image
 
 on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Branch or ref to build"
+        required: false
+        type: string
   push:
     branches:
       - main
@@ -24,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          ref: ${{ inputs.ref || github.head_ref || github.ref }}
           fetch-depth: 0                # fetch the whole repo history
 
       - name: Git Version
@@ -39,7 +45,7 @@ jobs:
       - name: Get Tag Version
         id: get_version
         run: |
-          export TRUNCATED_GITHUB_SHA=$(echo ${{ github.sha }} | cut -c1-7);
+          export TRUNCATED_GITHUB_SHA=$(git rev-parse --short=7 HEAD);
           echo "VERSION_TAG=${GITHUB_REF/refs\/heads\//}-${TRUNCATED_GITHUB_SHA}" >> $GITHUB_ENV
 
       - uses: actions/setup-java@v4
