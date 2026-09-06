@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import call, patch
 
 import feishu_common as fc
 from sync_levels import (
@@ -13,6 +14,60 @@ from sync_levels import (
 
 
 class SyncLevelsTest(unittest.TestCase):
+    def test_records_search_paginates_with_query_params(self):
+        responses = [
+            {
+                "data": {
+                    "items": [{"record_id": "first"}],
+                    "has_more": True,
+                    "page_token": "next-page",
+                }
+            },
+            {
+                "data": {
+                    "items": [{"record_id": "second"}],
+                    "has_more": False,
+                }
+            },
+        ]
+
+        with patch.object(fc, "_request_json", side_effect=responses) as request_json, patch.object(
+            fc.time, "sleep"
+        ):
+            result = fc.list_records(
+                "app-token",
+                "table-id",
+                "tenant-token",
+                sort_field="文本",
+                field_names=["stageId", "结束时间"],
+            )
+
+        self.assertEqual(
+            result,
+            [{"record_id": "first"}, {"record_id": "second"}],
+        )
+        url = f"{fc.BASE_URL}/open-apis/bitable/v1/apps/app-token/tables/table-id/records/search"
+        common = {
+            "headers": {"Authorization": "Bearer tenant-token"},
+            "json": {
+                "field_names": ["stageId", "结束时间"],
+                "sort": [{"field_name": "文本", "desc": False}],
+            },
+            "timeout": 30,
+        }
+        self.assertEqual(
+            request_json.call_args_list,
+            [
+                call("POST", url, params={"page_size": 500}, **common),
+                call(
+                    "POST",
+                    url,
+                    params={"page_size": 500, "page_token": "next-page"},
+                    **common,
+                ),
+            ],
+        )
+
     def test_projects_end_time_field(self):
         self.assertIn(END_TIME_FIELD, PROJECTED_FIELDS)
 

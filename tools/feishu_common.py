@@ -125,10 +125,11 @@ def list_records(
     all_records: list[dict[str, Any]] = []
     page_token = ""
     while True:
-        body = {"page_size": 500}
+        params = {"page_size": 500}
         if page_token:
-            body["page_token"] = page_token
+            params["page_token"] = page_token
 
+        body: dict[str, Any] = {}
         if field_names:
             body["field_names"] = field_names
         if sort_field:
@@ -139,6 +140,7 @@ def list_records(
             "POST",
             url,
             headers={"Authorization": f"Bearer {token}"},
+            params=params,
             json=body,
             timeout=30,
         )
