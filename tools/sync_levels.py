@@ -18,20 +18,8 @@ OUTPUT_FILES = (
 )
 
 FIELD_CANDIDATES = {
-    "stageId": (
-        "stageId",
-        "stageId_new",
-        "StageId",
-        "关卡StageId",
-        "stage_id",
-    ),
-    "levelId": (
-        "levelId",
-        "levelId_new",
-        "LevelId",
-        "关卡ID",
-        "level_id",
-    ),
+    "stageId": ("stageId", "StageId", "关卡StageId", "stage_id"),
+    "levelId": ("levelId", "LevelId", "关卡ID", "level_id"),
     "category": ("关卡分类", "catOne", "分类1", "一级分类", "类别1"),
     "displayName": ("显示名称", "name", "关卡名", "名称"),
 }
@@ -170,7 +158,6 @@ def transform_levels(records: list) -> list[dict[str, str]]:
     )
 
     data: list[dict[str, str]] = []
-    stage_ids: set[str] = set()
     for r in ordered:
         f = r["fields"]
 
@@ -183,14 +170,6 @@ def transform_levels(records: list) -> list[dict[str, str]]:
         level_id = _pick(f, *FIELD_CANDIDATES["levelId"]) or stage_id
         if not stage_id or not level_id or not cat_one or not display_name:
             raise ValueError(f"飞书关卡记录缺少关键信息: {r!r}")
-        if stage_id in stage_ids:
-            alternate_stage_id = _pick(f, "stageId_new")
-            if alternate_stage_id and alternate_stage_id not in stage_ids:
-                stage_id = alternate_stage_id
-            else:
-                raise ValueError(f"飞书关卡记录存在重复 stageId: {stage_id}")
-        stage_ids.add(stage_id)
-
         # 兰台：catTwo 用期数（关卡名），catThree 用备注（阵型）
         if cat_one == "兰台":
             cat_two = _normalize_title(raw_name or display_name)
