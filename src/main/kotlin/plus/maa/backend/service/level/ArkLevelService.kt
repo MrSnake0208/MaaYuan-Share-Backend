@@ -39,7 +39,39 @@ class ArkLevelService(
 
     fun queryLevelInfosByKeyword(keyword: String): List<ArkLevelInfo> {
         if (keyword.isBlank()) return emptyList()
-        val tokens = keyword.trim().split(" ", "\t").mapNotNull { it.takeIf { s -> s.isNotBlank() } }
+        val trimmed = keyword.trim()
+
+        // 关键字本身若是具体的关卡标识（stageId / levelId），必须精确命中。
+        // 否则下面的 contains 模糊匹配会把同前缀/同子串的其它关卡一并带出，
+        // 例如 er_qi 会命中 er_qi_01/er_qi_02、yan_ 会命中 yan_ren_zhang_fei、
+        // 2_0_2_5_nian_1_1 会命中其洞窟子关卡，导致搜索结果与所选关卡不符。
+        val exactV1 = manualLevelInfos.filter {
+            it.stageId.equals(trimmed, ignoreCase = true) || it.levelId.equals(trimmed, ignoreCase = true)
+        }
+        val exactV2 = arkLevelInfosV2
+            .filter {
+                it.stageId.equals(trimmed, ignoreCase = true) || it.levelId.equals(trimmed, ignoreCase = true)
+            }
+            .map {
+                ArkLevelInfo(
+                    levelId = it.levelId,
+                    stageId = it.stageId,
+                    catOne = it.catOne,
+                    catTwo = it.catTwo,
+                    catThree = it.catThree,
+                    name = it.name,
+                )
+            }
+        if (exactV1.isNotEmpty() || exactV2.isNotEmpty()) {
+            val seenExact = HashSet<String>()
+            val exactResult = ArrayList<ArkLevelInfo>()
+            (exactV1 + exactV2).forEach { info ->
+                if (seenExact.add(info.stageId)) exactResult += info
+            }
+            return exactResult
+        }
+
+        val tokens = trimmed.split(" ", "\t").mapNotNull { it.takeIf { s -> s.isNotBlank() } }
         if (tokens.isEmpty()) return emptyList()
 
         fun matchesAllTokensV1(info: ArkLevelInfo): Boolean {
