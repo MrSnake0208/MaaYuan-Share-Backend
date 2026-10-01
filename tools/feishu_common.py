@@ -26,13 +26,13 @@ RETRY_BACKOFF_SECONDS = 1
 TABLES = {
     "levels": dict(
         cn_name="关卡数据",
-        app=os.getenv("FEISHU_LEVELS_APP_TOKEN", os.getenv("FEISHU_BITABLE_ID", "IquLbb1sVaV3ljsPhaPcxbmVnbb")),
-        tbl=os.getenv("FEISHU_LEVELS_TABLE_ID", os.getenv("FEISHU_TABLE_ID", "tblywzqIAWTwZstE")),
+        app=os.getenv("FEISHU_LEVELS_APP_TOKEN") or os.getenv("FEISHU_BITABLE_ID") or "IquLbb1sVaV3ljsPhaPcxbmVnbb",
+        tbl=os.getenv("FEISHU_LEVELS_TABLE_ID") or os.getenv("FEISHU_TABLE_ID") or "tblywzqIAWTwZstE",
     ),
     "operators": dict(
         cn_name="密探数据",
-        app=os.getenv("FEISHU_OPERATORS_APP_TOKEN", os.getenv("FEISHU_BITABLE_ID", "IquLbb1sVaV3ljsPhaPcxbmVnbb")),
-        tbl=os.getenv("FEISHU_OPERATORS_TABLE_ID", os.getenv("FEISHU_TABLE_ID", "tblqJZBK1eaz7idg")),
+        app=os.getenv("FEISHU_OPERATORS_APP_TOKEN") or os.getenv("FEISHU_BITABLE_ID") or "IquLbb1sVaV3ljsPhaPcxbmVnbb",
+        tbl=os.getenv("FEISHU_OPERATORS_TABLE_ID") or os.getenv("FEISHU_TABLE_ID") or "tblqJZBK1eaz7idg",
     ),
 }
 
