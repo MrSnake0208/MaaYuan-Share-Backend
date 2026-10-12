@@ -24,15 +24,15 @@ import plus.maa.backend.common.utils.converter.CopilotConverter
 import plus.maa.backend.config.external.MaaCopilotProperties
 import plus.maa.backend.controller.request.copilot.CopilotCUDRequest
 import plus.maa.backend.controller.request.copilot.CopilotDTO
+import plus.maa.backend.controller.request.copilot.CopilotMetadataRequest
 import plus.maa.backend.controller.request.copilot.CopilotQueriesRequest
 import plus.maa.backend.controller.request.copilot.CopilotRatingReq
 import plus.maa.backend.controller.request.copilot.CopilotRawDTO
-import plus.maa.backend.controller.request.copilot.CopilotMetadataRequest
 import plus.maa.backend.controller.response.MaaResultException
 import plus.maa.backend.controller.response.copilot.ArkLevelInfo
 import plus.maa.backend.controller.response.copilot.CopilotInfo
-import plus.maa.backend.controller.response.copilot.CopilotPageInfo
 import plus.maa.backend.controller.response.copilot.CopilotMetadataInfo
+import plus.maa.backend.controller.response.copilot.CopilotPageInfo
 import plus.maa.backend.repository.CommentsAreaRepository
 import plus.maa.backend.repository.CopilotRepository
 import plus.maa.backend.repository.RedisCache
@@ -197,7 +197,7 @@ class CopilotService(
             )
             // 仅详情接口做 editorv2 兼容：缺少 level 时由 stage_name/stageName/实体字段补齐
             val compat = info.copy(
-                content = ensureEditorV2Level(info.content, copilot.stageName, copilot.levelMeta)
+                content = ensureEditorV2Level(info.content, copilot.stageName, copilot.levelMeta),
             )
             compat to it.view
         }
@@ -351,42 +351,27 @@ class CopilotService(
             criteriaObj.orOperator(orQueries)
         }
 
-        // 标题、描述、神秘代码
-        val queryObj = Query().addCriteria(criteriaObj)
-
-        if (!(keyword?.length == 1 && keyword[0].isLetterOrDigit())) {
-            segmentService.getSegment(keyword)
-                .takeIf {
-                    it.isNotEmpty()
+        // 标题、描述：保留分词匹配，同时支持字面子串搜索
+        if (!keyword.isNullOrEmpty()) {
+            val idLists = segmentService.getSegment(keyword).mapNotNull { word ->
+                val ids = segmentService.fetchIndexInfo(word)
+                if (word.equals(keyword, ignoreCase = true) && ids.isEmpty()) {
+                    null
+                } else {
+                    ids
                 }
-                ?.let { words ->
-                    val idList = words.mapNotNull {
-                        val result = segmentService.fetchIndexInfo(it)
-                        if (it.lowercase() == keyword?.lowercase() && result.isEmpty()) {
-                            null
-                        } else {
-                            result
-                        }
-                    }
-
-                    val intersection = when {
-                        idList.isEmpty() -> emptySet()
-                        else -> {
-                            val iterator = idList.iterator()
-                            val result = HashSet(iterator.next())
-                            while (iterator.hasNext()) {
-                                result.retainAll(iterator.next())
-                            }
-                            result
-                        }
-                    }
-
-                    if (intersection.isEmpty()) {
-                        return CopilotPageInfo(false, 1, 0, emptyList())
-                    }
-                    queryObj.addCriteria(Copilot::copilotId inValues intersection)
-                }
+            }
+            val matchingIds = idLists.reduceOrNull { matches, ids -> matches.intersect(ids) } ?: emptySet()
+            // shortcut: 子串匹配扫描候选作业，搜索延迟升高时改用专用搜索索引
+            val literalKeyword = Pattern.compile(Pattern.quote(keyword), Pattern.CASE_INSENSITIVE)
+            criteriaObj.orOperator(
+                Copilot::copilotId inValues matchingIds,
+                Criteria.where("doc.title").regex(literalKeyword),
+                Criteria.where("doc.details").regex(literalKeyword),
+            )
         }
+
+        val queryObj = Query().addCriteria(criteriaObj)
 
         // 去除large fields
         queryObj.fields().exclude("actions")
@@ -629,6 +614,9 @@ class CopilotService(
         update["ratingRatio"] = ratingLevel
         mongoTemplate.updateFirst(query, update, Copilot::class.java)
 
+        Cache.invalidateCopilotInfoByCid(request.id)
+        deleteCacheWhenMatchCopilotId(request.id)
+
         // 记录近期评分变化量前 100 的作业 id
         redisCache.incZSet(
             "rate:hot:copilotIds",
@@ -807,14 +795,14 @@ class CopilotService(
     }
 
     /**
-     * 用于重置缓存，数据修改为私有或者删除时用于重置缓存防止继续被查询到
+     * 同步清除包含该作业的首页缓存，避免修改或评分后继续返回旧数据
      */
     private fun deleteCacheWhenMatchCopilotId(copilotId: Long) {
         for (k in HOME_PAGE_CACHE_CONFIG.keys) {
             val key = String.format("home:%s:copilotIds", k)
             val pattern = String.format("home:%s:*", k)
             if (redisCache.valueMemberInSet(key, copilotId)) {
-                redisCache.removeCacheByPattern(pattern)
+                redisCache.syncRemoveCacheByPattern(pattern)
             }
         }
     }
