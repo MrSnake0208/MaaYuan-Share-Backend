@@ -1361,11 +1361,11 @@
   },
   {
     "catOne": "家具",
-    "catTwo": "灵山学宫",
+    "catTwo": "灵山开学日",
     "catThree": "无",
-    "name": "灵山学宫",
-    "levelId": "jia_ju/ling_shan_xue_gong",
-    "stageId": "ling_shan_xue_gong",
+    "name": "灵山开学日",
+    "levelId": "jia_ju/ling_shan_kai_xue_ri",
+    "stageId": "ling_shan_kai_xue_ri",
     "endTime": "2027-02-01T00:00:00.000+08:00"
   },
   {
