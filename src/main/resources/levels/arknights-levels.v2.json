@@ -1375,5 +1375,23 @@
     "name": "沧海焚舟",
     "levelId": "di_gong/cang_hai_fen_zhou",
     "stageId": "cang_hai_fen_zhou"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "拉磨健将",
+    "catThree": "左",
+    "name": "拉磨健将",
+    "levelId": "dong_ku/la_mo_jian_jiang",
+    "stageId": "la_mo_jian_jiang",
+    "endTime": "2026-12-01T00:00:00.000+08:00"
+  },
+  {
+    "catOne": "洞窟",
+    "catTwo": "蜀山猕猴",
+    "catThree": "右",
+    "name": "蜀山猕猴",
+    "levelId": "dong_ku/shu_shan_mi_hou",
+    "stageId": "shu_shan_mi_hou",
+    "endTime": "2026-12-01T00:00:00.000+08:00"
   }
 ]
