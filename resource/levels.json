@@ -1393,5 +1393,14 @@
     "levelId": "dong_ku/shu_shan_mi_hou",
     "stageId": "shu_shan_mi_hou",
     "endTime": "2026-12-01T00:00:00.000+08:00"
+  },
+  {
+    "catOne": "活动",
+    "catTwo": "建木培植志",
+    "catThree": "无",
+    "name": "建木培植志",
+    "levelId": "huo_dong/jian_mu_pei_zhi_zhi",
+    "stageId": "jian_mu_pei_zhi_zhi",
+    "endTime": "2026-11-19T00:00:00.000+08:00"
   }
 ]
