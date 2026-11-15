@@ -59,7 +59,8 @@
     "catThree": "无",
     "name": "欲追日影",
     "levelId": "dai_hao_yuan/di_gong/yu_zhui_ri_ying",
-    "stageId": "yu_zhui_ri_ying"
+    "stageId": "yu_zhui_ri_ying",
+    "endTime": "2026-12-22T00:00:00.000+08:00"
   },
   {
     "catOne": "地宫",
@@ -1374,7 +1375,8 @@
     "catThree": "无",
     "name": "沧海焚舟",
     "levelId": "di_gong/cang_hai_fen_zhou",
-    "stageId": "cang_hai_fen_zhou"
+    "stageId": "cang_hai_fen_zhou",
+    "endTime": "2026-12-22T00:00:00.000+08:00"
   },
   {
     "catOne": "洞窟",
